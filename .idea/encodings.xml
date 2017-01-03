@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/../radtools-frontend/app/login/login.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../radtools-frontend/app/login/login.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../radtools-frontend/app/scripts/app.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../radtools-frontend/app/scripts/constantes.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../radtools-frontend/app/scripts/env.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../radtools-frontend/app/scripts/services/sharedService.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../radtools-frontend/bower.json" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../radtools-frontend/package.json" charset="UTF-8" />
+  </component>
+</project>

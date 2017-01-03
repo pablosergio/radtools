@@ -1,0 +1,8 @@
+TOKEN_SECRET=developmentSessionSecret
+DB_USER=postgres
+DB_PASS=postgres
+DATA_BASE=radtools
+DB_DIALECT=postgres
+DB_PORT=5432
+DB_SCHEMA=public
+DB_SERVER=localhost
