@@ -7,21 +7,39 @@
 var _  = require('lodash');
 
 exports.getType = function(type){
-    var _type = 'string';
-    var _split = type.split("(");
-    switch(_split[0]){
-        case "integer":
-            _type = "int";
+    var field = {
+        type: 'string',
+        size: 0
+    };
+    
+    switch(type){
+        case String(type.match(/^integer.*/)):
+           field.type = "int";
+           field.size = getSize(type);
             break;
-        case "numeric":
-            _type: "decimal";
+        case String(type.match(/^numeric.*/)):
+           field.type = "decimal";
+           field.size = this.getSize(type);
             break;
-        case "character varying":
-            _type = "string";
+        case String(type.match(/^character.*/)):
+            field.type = "string";
+            field.size = this.getSize(type);
             break;
-        case "timestamp without time zone":
-            _type = "date";
+        case String(type.match(/^timestamp.*/)):
+            field.type = "date";
+            field.size = this.getSize(type);
             break;
     }
-    return _type;
-}
+    //return _type;
+    return field;
+};
+
+exports.getSize = function(type){
+    var size = 0;
+    var start = type.indexOf("(");
+    if(start > -1){
+        var end = type.indexOf(")");
+        size = type.substring(start + 1, end);
+    }
+    return size;
+};
