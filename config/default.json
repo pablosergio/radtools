@@ -5,5 +5,8 @@
       "logsDirectory" : "logs"
     },
     "success": "Proceso ejecutado satisfactoriamente"
+  },
+  "CLASS_EXTJS": {
+  	"model": "Ext.data.Model"
   }
 }

@@ -15,7 +15,7 @@ exports.getType = function(type){
     switch(type){
         case String(type.match(/^integer.*/)):
            field.type = "int";
-           field.size = getSize(type);
+           field.size = this.getSize(type);
             break;
         case String(type.match(/^numeric.*/)):
            field.type = "decimal";
@@ -42,4 +42,13 @@ exports.getSize = function(type){
         size = type.substring(start + 1, end);
     }
     return size;
+};
+
+exports.getIdProperty = function(columns){
+    var idProperty = null;
+    columns.forEach(function(column){
+        if(column.primarykey === 't')
+            idProperty = column.name;
+    })
+    return idProperty;
 };
