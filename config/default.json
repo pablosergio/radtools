@@ -8,5 +8,31 @@
   },
   "CLASS_EXTJS": {
   	"model": "Ext.data.Model"
+  },
+  "CLASS_ABSTRACT": {
+    "store": "abstract.store.AbstractStore"
+  },
+  "TOKEN": {
+    "key": "appToken"
+  },
+  "PROXY_STORE": {
+    "type": "ajax",
+    "reader": {
+      "type": "json",
+      "root": "rows",
+      "totalProperty": "total",
+      "successProperty": "success",
+      "messageProperty": "msg"
+    },
+    "writer": {
+      "type": "json",
+      "writeAllFields": true,
+      "allowSingle": false,
+      "root": "data"
+    },
+    "sorters": {
+      "direction": "DESC"
+    }
   }
+
 }

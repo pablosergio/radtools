@@ -23,6 +23,8 @@ function setup(router, handlers) {
 
     /* Write Files */
     router.post('/model',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createModel);
+    router.post('/store',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createStore);
+     router.post('/service',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createService);
 }
 
 exports.setup = setup;

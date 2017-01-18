@@ -16,6 +16,8 @@ var _                  = require('lodash');
 
 var fileHandler = function() {
     this.createModel = handleCreateModelRequest;
+    this.createStore = handleCreateStoreRequest;
+    this.createService = handleCreateServiceRequest;
 }
 
 function handleCreateModelRequest(req, res, next) {
@@ -27,6 +29,32 @@ function handleCreateModelRequest(req, res, next) {
             success: true,
             //rows: result.rows,
             //total: result.count
+        })
+    }, function(err){
+        res.status(500);
+        res.send(err);
+        return next(new Error(err));
+    })
+}
+
+function handleCreateStoreRequest(req, res, next) {
+    var params = req.body
+    var _file = fileService.createStore(params).then(function(result){
+        res.status(200).send({
+            success: true,
+        })
+    }, function(err){
+        res.status(500);
+        res.send(err);
+        return next(new Error(err));
+    })
+}
+
+function handleCreateServiceRequest(req, res, next) {
+    var params = req.body
+    var _file = fileService.createService(params).then(function(result){
+        res.status(200).send({
+            success: true,
         })
     }, function(err){
         res.status(500);

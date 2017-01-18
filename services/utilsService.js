@@ -52,3 +52,29 @@ exports.getIdProperty = function(columns){
     })
     return idProperty;
 };
+
+exports.toCamelCase = function(str, isCapitalize){
+    var index = [];
+    for(i=0; i < str.length; i++){
+        if(str.charAt(i) === '_'){
+            index.push(i);
+        }
+    }
+    
+    for(i=0; i < index.length; i++){
+        var _char = str.charAt(index[i] + 1).toUpperCase();
+        
+        str = replaceAt(str, index[i] + 1, _char);
+        function replaceAt(string, index, replace) {
+                return string.substring(0, index) + replace + string.substring(index + 1);
+        }   
+    }
+
+    str = str.replace(/_/gi, '');
+    if(isCapitalize)
+       str = str.replace(/\b\w/g, function(l){ return l.toUpperCase() })
+    else
+       str = str.replace(/\b\w/g, function(l){ return l.toLowerCase() })
+    
+    return str;
+};
