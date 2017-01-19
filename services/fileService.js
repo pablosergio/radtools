@@ -201,6 +201,13 @@ exports.createService = function(object){
         _file.write("\t\tthis.initConfig(config);\n")
         _file.write("\t\treturn this.callParent(arguments);\n")
         _file.write("\t},\n")
+        
+        _file.write("\n")
+        
+        _file.write("\t/* Description: Load ".concat(utils.toCamelCase(object.table, true), " */\n"))
+        _file.write("\t/* Params: params = { param1: valor1, ....} or {} or  null */\n")
+        _file.write("\t/* Return: records of ".concat(utils.toCamelCase(object.table, true), " */\n"))
+        
         _file.write("\tload".concat(utils.toCamelCase(object.table, true), ": function(params) {\n"))
         _file.write("\t\tvar deferred;\n")
         _file.write("\t\tdeferred = Ext.create('Deft.promise.Deferred');\n")
@@ -217,6 +224,41 @@ exports.createService = function(object){
         _file.write("\t\t});\n")
         _file.write("\t\treturn deferred.promise;\n")
         _file.write("\t},\n")
+
+        _file.write("\t/* Description: Save ".concat(utils.toCamelCase(object.table, true), " */\n"))
+        _file.write("\t/* Params: params = { param1: valor1, ....} or {} or  null */\n")
+        _file.write("\t/* Return: records of ".concat(utils.toCamelCase(object.table, true), " */\n"))
+        
+        _file.write("\tsave".concat(utils.toCamelCase(object.table, true), ": function(", utils.toCamelCase(object.table), ") {\n"))
+        _file.write("\t\tif (this.isNewSolicitud(".concat(utils.toCamelCase(object.table),")) {\n"))
+        _file.write("\t\t\tthis.get".contact(utils.toCamelCase(object.table, true), "().add(", utils.toCamelCase(object.table),");\n"))
+        _file.write("\t},\n")
+
+        /*_file.write("\t\tvar deferred;\n")
+        _file.write("\t\tdeferred = Ext.create('Deft.promise.Deferred');\n")
+        _file.write("\t\tthis.get".concat(utils.toCamelCase(object.table, true), "Store().proxy.extraParams = params;\n"))
+        _file.write("\t\tthis.get".concat(utils.toCamelCase(object.table, true), "Store().load({\n"))
+        _file.write("\t\t\tcallback: function(records, operation, success) {\n")
+        _file.write("\t\t\t\tif (success) {\n")      
+        _file.write("\t\t\t\t\treturn deferred.resolve(records);\n")
+        _file.write("\t\t\t\t} else {\n")
+        _file.write("\t\t\t\t\treturn deferred.reject('Codigo error: ' + operation.error.status + '. Error: ' + operation.error.statusText);\n")
+        _file.write("\t\t\t\t}\n")
+        _file.write("\t\t\t},\n")
+        _file.write("\t\t\tscope: this\n")
+        _file.write("\t\t});\n")
+        _file.write("\t\treturn deferred.promise;\n")
+        _file.write("\t},\n")
+
+/*
+           saveSolicitud: function(solicitud) {
+    if (this.isNewSolicitud(solicitud)) {
+      this.getSolicitudStore().add(solicitud);
+    }
+    solicitud.set("fecha_reg", new Date());
+    return this.syncSolicitudStore();
+  },   
+*/
       
         _file.write("});")
         _file.end();
