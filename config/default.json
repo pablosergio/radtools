@@ -6,11 +6,34 @@
     },
     "success": "Proceso ejecutado satisfactoriamente"
   },
+  "PATH": {
+  	"app": "D:/tempo/app",
+  	"model": "D:/tempo/app/model",
+  	"store": "D:/tempo/app/store",
+  	"service": "D:/tempo/app/service",
+  	"view": "D:/tempo/app/view",
+  	"controller": "D:/tempo/app/controller",
+  	"context": "D:/tempo/app/context"
+  },
+  "WORKSPACE": {
+  	"app": "app",
+  	"model": "app.model",
+  	"store": "app.store",
+  	"service": "app.service",
+  	"view": "app.view",
+  	"controller": "app.controller",
+  	"context": "app.context"
+  },
   "CLASS_EXTJS": {
+  	"model": "Ext.data.Model",
+  	"panel": "Ext.panel.Panel",
   	"model": "Ext.data.Model"
   },
   "CLASS_ABSTRACT": {
-    "store": "abstract.store.AbstractStore"
+    "store": "app.store.abstract.AbstractStore",
+    "context": "app.context.abstract.AbstractContext",
+    "grid": "app.view.abstract.AbstractGrid",
+    "form": "app.view.abstract.AbstractForm"
   },
   "TOKEN": {
     "key": "appToken"
@@ -33,6 +56,14 @@
     "sorters": {
       "direction": "DESC"
     }
+  },
+  "WIDTH": {
+  	"panel": {
+  		"region": {
+  			"center": "60%",
+  			"east": "40%",
+  			"west": "20%"
+  		}
+  	}
   }
-
 }

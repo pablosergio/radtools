@@ -18,6 +18,10 @@ var fileHandler = function() {
     this.createModel = handleCreateModelRequest;
     this.createStore = handleCreateStoreRequest;
     this.createService = handleCreateServiceRequest;
+    this.createContext = handleCreateContextRequest;
+    this.createMainPanel = handleCreateMainPanelRequest;
+    this.createGrid = handleCreateGridRequest;
+    this.createForm = handleCreateFormRequest;
 }
 
 function handleCreateModelRequest(req, res, next) {
@@ -53,6 +57,58 @@ function handleCreateStoreRequest(req, res, next) {
 function handleCreateServiceRequest(req, res, next) {
     var params = req.body
     var _file = fileService.createService(params).then(function(result){
+        res.status(200).send({
+            success: true,
+        })
+    }, function(err){
+        res.status(500);
+        res.send(err);
+        return next(new Error(err));
+    })
+}
+
+function handleCreateContextRequest(req, res, next) {
+    var params = req.body
+    var _file = fileService.createContext(params).then(function(result){
+        res.status(200).send({
+            success: true,
+        })
+    }, function(err){
+        res.status(500);
+        res.send(err);
+        return next(new Error(err));
+    })
+}
+
+function handleCreateMainPanelRequest(req, res, next) {
+    var params = req.body
+    var _file = fileService.createMainPanel(params).then(function(result){
+        res.status(200).send({
+            success: true,
+        })
+    }, function(err){
+        res.status(500);
+        res.send(err);
+        return next(new Error(err));
+    })
+}
+
+function handleCreateGridRequest(req, res, next) {
+    var params = req.body
+    var _file = fileService.createGrid(params).then(function(result){
+        res.status(200).send({
+            success: true,
+        })
+    }, function(err){
+        res.status(500);
+        res.send(err);
+        return next(new Error(err));
+    })
+}
+
+function handleCreateFormRequest(req, res, next) {
+    var params = req.body
+    var _file = fileService.createForm(params).then(function(result){
         res.status(200).send({
             success: true,
         })
