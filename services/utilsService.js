@@ -5,6 +5,7 @@
  * Created by Sergio on 10/12/2016.
  */
 var _  = require('lodash');
+  cfg  = require('config');
 
 exports.getType = function(type){
     var field = {
@@ -160,14 +161,15 @@ exports.convertToFieldSet = function(fieldset, identation){
         _fieldset = _fieldset.concat(_identation, "\t\tcollapsible: false,\n");
         _fieldset = _fieldset.concat(_identation, "\t\tmargin: 20,\n");
         _fieldset = _fieldset.concat(_identation, "\t\titems: [\n");
-        _fieldset = _fieldset.concat(_identation, "\t\t\t{ xtype: _this.".concat(_this.toCamelCase(fieldset.name), "}\n"));            
+        _fieldset = _fieldset.concat(_identation, "\t\t\t{ xtype: _this.".concat(_this.toCamelCase(fieldset.name), " }\n"));            
         _fieldset = _fieldset.concat(_identation, "\t\t]\n");
         _fieldset = _fieldset.concat(_identation, "\t},\n");
     
     return _fieldset;    
 };
 
-exports.convertToForm = function(columns, fields, title, icon, identation){
+exports.convertToForm = function(columns, fields, title, icon, identation, isFilterForm){
+    var _this = this;
     var _title = title ? "'".concat(title, "'") :  null;
     var _icon = icon ? "'".concat(icon, "'") :  null;
     var _identation ="";
@@ -195,7 +197,186 @@ exports.convertToForm = function(columns, fields, title, icon, identation){
     form = form.concat(_identation,"\t\t}\n");
     form = form.concat(_identation,"\t},\n");
     form = form.concat(_identation,"\titems: [\n");
+        fields.forEach(function(field){
+            form = form.concat(_this.convertToWidget(field, identation + 1, isFilterForm));        
+        })
     form = form.concat(_identation,"\t]\n");
     form = form.concat(_identation,"});\n");
     return form;
+};
+
+exports.convertToWidget = function(field, identation, isFilterForm){
+    var _this = this;
+    var widget = "";
+    var _type = _this.getType(field.type);
+    switch(_type.type){
+        case 'string':
+            if(field.input == 'combo'){
+                widget = _this.convertToComboBox(field, identation, isFilterForm)
+            }else{
+                widget = _this.convertToTextField(field, 50, identation, isFilterForm);
+            }
+            break;
+        case 'int':
+            if(field.input == 'combo'){
+                widget = _this.convertToComboBox(field, identation, isFilterForm)
+            }else{
+                widget = _this.convertToNumberField(field, 50, identation, isFilterForm);
+            }
+            break;
+        case 'decimal':
+            if(field.input == 'combo'){
+                widget = _this.convertToComboBox(field, identation, isFilterForm)
+            }else{
+                widget = _this.convertToNumberField(field, 50, identation, isFilterForm);
+            }
+            break;
+        case 'date':
+            widget = _this.convertToDateField(field, 50, identation, isFilterForm);
+            break;
+    }
+    return widget;
+}
+
+exports.convertToTextField = function(field, size, identation, isFilterForm){
+    var _this = this;
+    var label = field.name.toUpperCase();
+        label = label.replace(/_/gi, ' ');
+        label = label.replace(/ID/gi, '');
+    
+    var _identation ="";
+    for (var i = 0; i < identation; i++) {
+        _identation += "\t";
+    }
+    var textfield = _identation.concat("{\n");
+    textfield = textfield.concat(_identation, "\txtype: 'textfield',\n");
+    textfield = textfield.concat(_identation, "\tname: '", field.name, "',\n");
+    textfield = textfield.concat(_identation, "\tfieldLabel: '", label, "',\n");
+    textfield = textfield.concat(_identation, "\tlabelAlign: 'right',\n");
+    textfield = textfield.concat(_identation, "\tlabelWidth: 120,\n");
+    textfield = textfield.concat(_identation, "\tlabelStyle: 'font-weight:bold;font-size:10px!important;',\n");
+    textfield = textfield.concat(_identation, "\temptyText: 'Ingresar...',\n");
+    textfield = textfield.concat(_identation, "\tplugins: ['clearbutton'],\n");
+    if(field.notnull && !isFilterForm){
+        textfield = textfield.concat(_identation, "\tallowBlank: false,\n");
+        textfield = textfield.concat(_identation, "\tafterLabelTextTpl: this.getRequiredStyle(),\n");
+    }
+    textfield = textfield.concat(_identation, "\tmargin: 10,\n");
+    textfield = textfield.concat(_identation, "\tmaxLength: ", size ? size : 250,",\n");
+    textfield = textfield.concat(_identation, "\tenforceMaxLength: true,\n");
+    textfield = textfield.concat(_identation, "\thidden: ", field.hidden || false, ",\n");
+    textfield = textfield.concat(_identation, "\treadOnly: ", field.readOnly || false, ",\n");
+    textfield = textfield.concat(_identation, "\tmaskRe: ", field.maskRe || null, ",\n");
+    textfield = textfield.concat(_identation, "\tregex: ", field.regex || null, ",\n");
+    textfield = textfield.concat(_identation, "},\n");
+                    
+    return textfield;
+}
+
+exports.convertToNumberField = function(field, size, identation, isFilterForm){
+    var _this = this;
+    var label = field.name.toUpperCase();
+        label = label.replace(/_/gi, ' ');
+        label = label.replace(/ID/gi, '');
+    
+    var _identation ="";
+    for (var i = 0; i < identation; i++) {
+        _identation += "\t";
+    }
+    var numberfield = _identation.concat("{\n");
+    numberfield = numberfield.concat(_identation, "\txtype: 'numberfield',\n");
+    numberfield = numberfield.concat(_identation, "\tname: '", field.name, "',\n");
+    numberfield = numberfield.concat(_identation, "\tfieldLabel: '", label, "',\n");
+    numberfield = numberfield.concat(_identation, "\tlabelAlign: 'right',\n");
+    numberfield = numberfield.concat(_identation, "\tlabelWidth: 120,\n");
+    numberfield = numberfield.concat(_identation, "\tlabelStyle: 'font-weight:bold;font-size:10px!important;',\n");
+    numberfield = numberfield.concat(_identation, "\temptyText: 'Ingresar...',\n");
+    numberfield = numberfield.concat(_identation, "\tplugins: ['clearbutton'],\n");
+    if(field.notnull && !isFilterForm){
+        numberfield = numberfield.concat(_identation, "\tallowBlank: false,\n");
+        numberfield = numberfield.concat(_identation, "\tafterLabelTextTpl: this.getRequiredStyle(),\n");
+    }
+    numberfield = numberfield.concat(_identation, "\tmargin: 10,\n");
+    numberfield = numberfield.concat(_identation, "\tmaxLength: ", size ? size : 250,",\n");
+    numberfield = numberfield.concat(_identation, "\tenforceMaxLength: true,\n");
+    
+    numberfield = numberfield.concat(_identation, "},\n");
+
+    return numberfield;
+};
+
+exports.convertToDateField = function(field, formatdate, identation, isFilterForm){
+    var _this = this;
+    var label = field.name.toUpperCase();
+        label = label.replace(/_/gi, ' ');
+        label = label.replace(/ID/gi, '');
+    
+    var _identation ="";
+    for (var i = 0; i < identation; i++) {
+        _identation += "\t";
+    }
+    var datefield = _identation.concat("{\n");
+    datefield = datefield.concat(_identation, "\txtype: 'datefield',\n");
+    datefield = datefield.concat(_identation, "\tname: '", field.name, "',\n");
+    datefield = datefield.concat(_identation, "\tfieldLabel: '", label, "',\n");
+    datefield = datefield.concat(_identation, "\tlabelAlign: 'right',\n");
+    datefield = datefield.concat(_identation, "\tlabelWidth: 120,\n");
+    datefield = datefield.concat(_identation, "\tlabelStyle: 'font-weight:bold;font-size:10px!important;',\n");
+    datefield = datefield.concat(_identation, "\temptyText: 'Ingresar...',\n");
+    datefield = datefield.concat(_identation, "\tplugins: ['clearbutton'],\n");
+    if(field.notnull && !isFilterForm){
+        datefield = datefield.concat(_identation, "\tallowBlank: false,\n");
+        datefield = datefield.concat(_identation, "\tafterLabelTextTpl: this.getRequiredStyle(),\n");
+    }
+    datefield = datefield.concat(_identation, "\tmargin: 10,\n");
+    datefield = datefield.concat(_identation, "},\n");
+    return datefield;
+};
+
+exports.convertToComboBox = function(field, identation, isFilterForm){
+    var _this = this;
+    var label = field.name.toUpperCase();
+        label = label.replace(/_/gi, ' ');
+        label = label.replace(/ID/gi, '');
+    
+    var _identation ="";
+    for (var i = 0; i < identation; i++) {
+        _identation += "\t";
+    }
+    var combobox = _identation.concat("{\n");
+    combobox = combobox.concat(_identation, "\txtype: 'combobox',\n");
+    combobox = combobox.concat(_identation, "\tname: '", field.name, "',\n");
+    combobox = combobox.concat(_identation, "\tfieldLabel: '", label, "',\n");
+    combobox = combobox.concat(_identation, "\tlabelAlign: 'right',\n");
+    combobox = combobox.concat(_identation, "\tlabelWidth: 120,\n");
+    combobox = combobox.concat(_identation, "\tlabelStyle: 'font-weight:bold;font-size:10px!important;',\n");
+    combobox = combobox.concat(_identation, "\temptyText: 'Seleccionar...',\n");
+    combobox = combobox.concat(_identation, "\tplugins: ['clearbutton'],\n");
+    if(field.notnull && !isFilterForm){
+        combobox = combobox.concat(_identation, "\tallowBlank: false,\n,");
+        combobox = combobox.concat(_identation, "\tafterLabelTextTpl: this.getRequiredStyle(),\n");
+    }
+    combobox = combobox.concat(_identation, "\tmargin: 10,\n");
+    if(field.foreignkey){
+        combobox = combobox.concat(_identation, "\tstore: ", "_this.", _this.toCamelCase(field.foreignkey), "Store.load({params: {", field.params, "}}),\n");
+        combobox = combobox.concat(_identation, "\tqueryMode: 'remote',\n");
+        combobox = combobox.concat(_identation, "\tqueryParam: '", cfg.PARAMS.queryParam, "',\n");
+        combobox = combobox.concat(_identation, "\tdisplayField: '", field.displayField, "',\n");
+        combobox = combobox.concat(_identation, "\tvalueField: '", field.valueField, "',\n");
+        combobox = combobox.concat(_identation, "\twidth: 400,\n");
+        combobox = combobox.concat(_identation, "\ttpl: ['<tpl for =\".\">',\n");
+        combobox = combobox.concat(_identation, "\t\t'<div class=\"x-boundlist-item\">',\n");
+        field.fields.forEach(function(_field){
+            combobox = combobox.concat(_identation, "\t\t\t'<strong>", _this.toCamelCase(_field.name, true), ": {", _field.name, "}</br>'\n");
+        })
+        combobox = combobox.concat(_identation,"\t\t'</tpl>'].join('')\n");
+    } else {
+        combobox = combobox.concat(_identation, "\tstore: ", "_this.", _this.toCamelCase(store), "Store.load({params: {", params, "}}),\n");
+        combobox = combobox.concat(_identation, "\tqueryMode: 'local',\n");
+        combobox = combobox.concat(_identation, "\tdisplayField: '", displayField, "',\n");
+        combobox = combobox.concat(_identation, "\tvalueField: '", valueField, "',\n");
+        combobox = combobox.concat(_identation, "\tforceSelection: true,\n");
+    }
+    combobox = combobox.concat(_identation, "},\n");
+    return combobox;
 }

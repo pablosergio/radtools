@@ -487,6 +487,7 @@ exports.createGrid = function(object){
 
 exports.createForm = function(object){
     var deferred = q.defer();
+    var isFilterForm = false;
     var path = cfg.PATH.view.concat("/", utils.toCamelCase(object.table), '/');
     shell.mkdir('-p', path);
 
@@ -506,10 +507,10 @@ exports.createForm = function(object){
             _file.write("\t\t'" + dependencia + "',\n")
         });
         _file.write("\t],\n")
-        _file.write("\tinject: ['".concat(utils.toCamelCase(object.table), "Store'],\n"))
-        _file.write("\tconfig: {\n")
-        _file.write("\t\t".concat(utils.toCamelCase(object.table), "Store: null\n"))
-        _file.write("\t},\n")
+        //_file.write("\tinject: ['".concat(utils.toCamelCase(object.table), "Store'],\n"))
+        //_file.write("\tconfig: {\n")
+        //_file.write("\t\t".concat(utils.toCamelCase(object.table), "Store: null\n"))
+        //_file.write("\t},\n")
         _file.write("\tinitComponent: function() {\n")
         _file.write("\t\tvar _this = this;\n")
         object.columns.forEach(function(column) {
@@ -519,7 +520,7 @@ exports.createForm = function(object){
         
         if(object.fieldsets.length > 0){
             object.fieldsets.forEach(function(fieldset) {
-                _file.write("\t\t_this.".concat(utils.toCamelCase(fieldset.name), " = ", utils.convertToForm(fieldset.columns, fieldset.fields, null, null, 2), "\n"));
+                _file.write("\t\t_this.".concat(utils.toCamelCase(fieldset.name), " = ", utils.convertToForm(fieldset.columns, fieldset.fields, null, null, 2, isFilterForm), "\n"));
             });    
         }
         /*object.fieldsets.forEach(function(fielset) {
@@ -544,9 +545,260 @@ exports.createForm = function(object){
     return deferred.promise;  
 };
 
-exports.createViewFilterForm = function(object){
+exports.createFilterForm = function(object){
+    var deferred = q.defer();
+    var isFilterForm = true;
+    var path = cfg.PATH.view.concat("/", utils.toCamelCase(object.table), '/');
+    shell.mkdir('-p', path);
+    var filename = path.concat(utils.toCamelCase(object.table, true), 'FilterForm.js'); 
+    var namespace = cfg.WORKSPACE.view.concat(".", utils.toCamelCase(object.table), ".", utils.toCamelCase(object.table, true), "FilterForm")
+    fs.truncate(filename, 0, function(){
+       var _file = fs.createWriteStream(filename, {
+            flags: 'a' 
+        })
+        var listOfDependencies = [];
+        _file.write("Ext.define('".concat(namespace,"', {\n"))
+        _file.write("\textend: '".concat(cfg.CLASS_EXTJS.form, "',\n"))
+        //_file.write("\tcontroller: '".concat(cfg.WORKSPACE.controller, ".", utils.toCamelCase(object.table), ".", utils.toCamelCase(object.table, true), "FormController',\n"))
+        _file.write("\talias: 'widget.".concat(utils.toCamelCase(object.table), "-filter-form',\n"))
+        _file.write("\trequires: [\n")
+        listOfDependencies.forEach(function(dependencia) {
+            _file.write("\t\t'" + dependencia + "',\n")
+        });
+        _file.write("\t],\n")
+        _file.write("\tinitComponent: function() {\n")
+        _file.write("\t\tvar _this = this;\n")
+        object.columns.forEach(function(column) {
+            if(column.foreignkey)
+                _file.write("\t\t_this.".concat(utils.toCamelCase(column.foreignkey), "Store = Ext.create('", cfg.WORKSPACE.store, ".", utils.toCamelCase(column.foreignkey), ".", utils.toCamelCase(column.foreignkey, true), ".Store');\n"));
+        });
+        
+        if(object.fieldsets.length > 0){
+            object.fieldsets.forEach(function(fieldset) {
+                _file.write("\t\t_this.".concat(utils.toCamelCase(fieldset.name), " = ", utils.convertToForm(fieldset.columns, fieldset.fields, null, null, 2, isFilterForm), "\n"));
+            });    
+        }
+        
+        _file.write("\t\tExt.apply(this, {\n")
+        _file.write("\t\t\ttitle: '".concat(utils.toCamelCase(object.table, true), "',\n"))
+        _file.write("\t\t\titems: [\n")
+        if(object.fieldsets.length > 0){
+            object.fieldsets.forEach(function(fieldset) {
+                _file.write(utils.convertToFieldSet(fieldset, 3));
+            });    
+        }
+        _file.write("\t\t\t]\n")
+        _file.write("});")
+        _file.end();
+    })
 
-}
+    deferred.resolve(true);
+    return deferred.promise;
+};
+
+exports.createMainPanelController = function(object){
+    var deferred = q.defer();
+    var path = cfg.PATH.controller.concat("/", utils.toCamelCase(object.table), '/');
+    shell.mkdir('-p', path);
+
+    var filename = path.concat(utils.toCamelCase(object.table, true), 'MainPanelController.js'); /* Nombre de Archivo formato Capitalize */
+    var namespace = cfg.WORKSPACE.controller.concat(".", utils.toCamelCase(object.table), ".", utils.toCamelCase(object.table, true), "MainPanelController")
+    fs.truncate(filename, 0, function(){
+       var _file = fs.createWriteStream(filename, {
+            flags: 'a' 
+        })
+        var listOfDependencies = [];
+        _file.write("Ext.define('".concat(namespace,"', {\n"))
+        _file.write("\textend: '".concat(cfg.CLASS_EXTJS.controller, "',\n"))
+        _file.write("\trequires: [\n")
+        listOfDependencies.forEach(function(dependencia) {
+            _file.write("\t\t'" + dependencia + "',\n")
+        });
+        _file.write("\t],\n")
+        _file.write("\tinject: [\n")
+        _file.write("\t\t'".concat(utils.toCamelCase(object.table), "Context'\n"))
+        _file.write("\t],\n")
+        _file.write("\tconfig: {\n")
+        _file.write("\t\t".concat(utils.toCamelCase(object.table), "Context: null\n"))
+        _file.write("\t},\n")
+        _file.write("\tobserve: {\n")
+        _file.write("\t\t".concat(utils.toCamelCase(object.table), "Context: {\n"))
+        _file.write("\t\t\t".concat(utils.toCamelCase(object.table), "Created: 'onCollapsePanel',\n"))
+        _file.write("\t\t\t".concat(utils.toCamelCase(object.table), "Opened: 'onExpandPanel',\n"))
+        _file.write("\t\t\t".concat(utils.toCamelCase(object.table), "Canceled: 'onCollapsePanel',\n"))
+        _file.write("\t\t\t".concat(utils.toCamelCase(object.table), "Deleted: 'onCollapsePanel'\n"))
+        _file.write("\t\t}\n")
+        _file.write("\t},\n")
+        _file.write("\tcontrol: {\n")
+        _file.write("\t\tview: {\n")
+        _file.write("\t\t\tboxready: 'loadInitialData',\n")
+        _file.write("\t\t},\n")
+        _file.write("\t\tpanelCollapsible".concat(utils.toCamelCase(object.table, true), ": {\n"))
+        _file.write("\t\t}\n")
+        _file.write("\t},\n")
+        _file.write("\tinit: function() {\n")
+        _file.write("\t\treturn this.callParent(arguments);\n")
+        _file.write("\t},\n")
+        _file.write("\tloadInitialData: function() {\n")
+        _file.write("\t\tvar _this = this;\n")
+        _file.write("\t\t_this.getPanelCollapsible".concat(utils.toCamelCase(object.table, true), "().collapse();\n"))
+        _file.write("\t},\n")
+        _file.write("\tonCollapsePanel: function(){\n")
+        _file.write("\t\tvar _this = this;\n")
+        _file.write("\t\t_this.getPanelCollapsible".concat(utils.toCamelCase(object.table, true), "().collapse();\n"))
+        _file.write("\t},\n")
+        _file.write("\tonExpandPanel: function(){\n")
+        _file.write("\t\tvar _this = this;\n")
+        _file.write("\t\t_this.getPanelCollapsible".concat(utils.toCamelCase(object.table, true), "().expand();\n"))
+        _file.write("\t}\n")
+        _file.write("});")
+        _file.end();
+    })
+
+    deferred.resolve(true);
+    return deferred.promise;  
+};
+
+exports.createGridController = function(object){
+var deferred = q.defer();
+    var path = cfg.PATH.controller.concat("/", utils.toCamelCase(object.table), '/');
+    shell.mkdir('-p', path);
+
+    var filename = path.concat(utils.toCamelCase(object.table, true), 'GridController.js'); 
+    var namespace = cfg.WORKSPACE.controller.concat(".", utils.toCamelCase(object.table), ".", utils.toCamelCase(object.table, true), "GridController")
+    fs.truncate(filename, 0, function(){
+       var _file = fs.createWriteStream(filename, {
+            flags: 'a' 
+        })
+        var listOfDependencies = [];
+        listOfDependencies.push(cfg.CLASS_ABSTRACT.filterWindow);
+        listOfDependencies.push(cfg.WORKSPACE.view.concat(".", utils.toCamelCase(object.table), ".", utils.toCamelCase(object.table, true), "FilterForm"));
+        _file.write("Ext.define('".concat(namespace,"', {\n"))
+        _file.write("\textend: '".concat(cfg.CLASS_ABSTRACT.gridController, "',\n"))
+        _file.write("\trequires: [\n")
+        listOfDependencies.forEach(function(dependencia) {
+            _file.write("\t\t'" + dependencia + "',\n")
+        });
+        _file.write("\t],\n")
+        _file.write("\tinject: [\n")
+        _file.write("\t\t'".concat(utils.toCamelCase(object.table), "Context',\n"))
+        _file.write("\t\t'".concat(utils.toCamelCase(object.table), "Service'\n"))
+        _file.write("\t],\n")
+        _file.write("\tconfig: {\n")
+        _file.write("\t\t".concat(utils.toCamelCase(object.table), "Context: null,\n"))
+        _file.write("\t\t".concat(utils.toCamelCase(object.table), "Service: null,\n"))
+        _file.write("\t\t".concat(utils.toCamelCase(object.table), ": null\n"))
+        _file.write("\t},\n")
+        _file.write("\tobserve: {\n")
+        _file.write("\t\t".concat(utils.toCamelCase(object.table), "Context: {\n"))
+        _file.write("\t\t\t".concat(utils.toCamelCase(object.table), "Created: 'onCollapsePanel',\n"))
+        _file.write("\t\t\t".concat(utils.toCamelCase(object.table), "Opened: 'onExpandPanel',\n"))
+        _file.write("\t\t\t".concat(utils.toCamelCase(object.table), "Canceled: 'onCollapsePanel',\n"))
+        _file.write("\t\t\t".concat(utils.toCamelCase(object.table), "Deleted: 'onCollapsePanel'\n"))
+        _file.write("\t\t}\n")
+        _file.write("\t},\n")
+        /*_file.write("\tcontrol: {\n")
+        _file.write("\t\tview: {\n")
+        _file.write("\t\t\tboxready: 'loadInitialData',\n")
+        _file.write("\t\t},\n")
+        _file.write("\t\tpanelCollapsible".concat(utils.toCamelCase(object.table, true), ": {\n"))
+        _file.write("\t\t}\n")
+        _file.write("\t},\n")*/
+        _file.write("\tinit: function() {\n")
+        _file.write("\t\treturn this.callParent(arguments);\n")
+        _file.write("\t},\n")
+        _file.write("\tloadInitialData: function() {\n")
+        _file.write("\t\t_this = this;\n")
+        _file.write("\t\t_this.getView().setLoading(true);\n")
+        _file.write("\t\treturn _this.get".concat(utils.toCamelCase(object.table, true), "Service().load", utils.toCamelCase(object.table, true), "({}).then({\n"))
+        _file.write("\t\t\tfailure: function(errorMessage) {\n")
+        _file.write("\t\t\t\treturn _this.getNotificationService().error('Error', errorMessage);\n")
+        _file.write("\t\t\t}\n")
+        _file.write("\t\t}).always(function() {\n")
+        _file.write("\t\t\treturn _this.getView().setLoading(false);\n")
+        _file.write("\t\t});\n")
+        _file.write("\t},\n")
+
+        _file.write("\tload".concat(utils.toCamelCase(object.table, true), ": function() {\n"))
+        _file.write("\t\t_this = this;\n")
+        _file.write("\t\t_this.getView().setLoading(true);\n")
+        _file.write("\t\treturn _this.get".concat(utils.toCamelCase(object.table, true), "Service().load", utils.toCamelCase(object.table, true), "({}).then({\n"))
+        _file.write("\t\t\tfailure: function(errorMessage) {\n")
+        _file.write("\t\t\t\treturn _this.getNotificationService().error('Error', errorMessage);\n")
+        _file.write("\t\t\t}\n")
+        _file.write("\t\t}).always(function() {\n")
+        _file.write("\t\t\treturn _this.getView().setLoading(false);\n")
+        _file.write("\t\t});\n")
+        _file.write("\t},\n")
+      
+        _file.write("\tonAddRecordClick: function() {\n")
+        _file.write("\t\t_this = this;\n")
+        _file.write("\t\tvar nuevo".concat(utils.toCamelCase(object.table), " = Ext.create('", cfg.WORKSPACE.model, ".", utils.toCamelCase(object.table), ".", utils.toCamelCase(object.table, true), "', {\n"))
+        _file.write("\t\t\testado: 'ACTIVO'\n")
+        _file.write("\t\t});\n")
+        _file.write("\t\treturn _this.get".concat(utils.toCamelCase(object.table, true), "Context().", utils.toCamelCase(object.table), "Opened(nuevo", utils.toCamelCase(object.table, true), ");\n"))
+        _file.write("\t},\n")
+  
+        _file.write("\tonSelectRecord: function(grid, record, row, rowIndex, event) {\n")
+        _file.write("\t\t_this = this;\n")
+        _file.write("\t\t_this.set".concat(utils.toCamelCase(object.table, true), "(record);\n"))
+        _file.write("\t\treturn _this.get".concat(utils.toCamelCase(object.table, true), "Context().", utils.toCamelCase(object.table), "Opened(record);\n"))
+        _file.write("\t},\n")
+
+        _file.write("\tonActionColumnClick: function(view, cell, rowIndex, columnIndex, event, record, row){\n")
+        _file.write("\t\tvar _this = this;\n")
+        _file.write("\t\treturn Ext.MessageBox.confirm('Confirmar', '¿Esta seguro de eliminar el registro?', function (button) {\n")
+        _file.write("\t\t\tif (button === 'yes') {\n")
+        _file.write("\t\t\t\treturn _this.delete".concat(utils.toCamelCase(object.table, true), "(record);\n"))
+        _file.write("\t\t\t}\n")
+        _file.write("\t\t}, this);\n")
+        _file.write("\t},\n")
+
+        _file.write("\tdelete".concat(utils.toCamelCase(object.table, true), ": function (", utils.toCamelCase(object.table), ") {\n"))
+        _file.write("\t\tvar _this = this;\n")
+        _file.write("\t\t_this.getView().setLoading(true);\n")
+        _file.write("\t\treturn this.get".concat(utils.toCamelCase(object.table, true), "Service().delete", utils.toCamelCase(object.table, true), "(", utils.toCamelCase(object.table), ").then({\n"))
+        _file.write("\t\t\tsuccess: function(res) {\n")
+        _file.write("\t\t\t\t_this.get".concat(utils.toCamelCase(object.table, true), "Context().", utils.toCamelCase(object.table), "Deleted();\n"))
+        _file.write("\t\t\t\treturn _this.getNotificationService().success('Eliminar', res.msg);\n")
+        _file.write("\t\t\t},\n")
+        _file.write("\t\t\tfailure: function(errorMessage) {\n")
+        _file.write("\t\t\t\treturn _this.getNotificationService().error('Eliminar', errorMessage);\n")
+        _file.write("\t\t\t}\n")
+        _file.write("\t\t}).always(function() {\n")
+        _file.write("\t\t\treturn _this.getView().setLoading(false);\n")
+        _file.write("\t\t});\n")
+        _file.write("\t},\n")    
+
+        _file.write("\tonFilterGridClick: function(){\n")
+        _file.write("\t\t_this = this;\n")
+        _file.write("\t\tvar filterWindow = Ext.widget('abstract-filter-window', {\n")
+        _file.write("\t\t\twidth: 640,\n")
+        _file.write("\t\t\ttitle: 'Filtrar ".concat(utils.toCamelCase(object.table, true), "',\n"))
+        _file.write("\t\t\tgrid: _this.getView()\n")
+        _file.write("\t\t});\n")
+        _file.write("\t\tvar filtroForm = Ext.widget('filtro-".concat(utils.toCamelCase(object.table), "-form');\n")) 
+        _file.write("\t\tfilterWindow.add(filtroForm);\n")
+        //_file.write("\tfiltroForm.setAllowBlankTodos(true);\n")
+        _file.write("\t\tfilterWindow.show();\n")
+        _file.write("\t},\n")
+
+        _file.write("\tonHistoryGridClick: function(){\n")
+        _file.write("\t\tvar _this = this;\n")
+        _file.write("\t\treturn _this.mostrarHistoricos(_this.get".concat(utils.toCamelCase(object.table, true), "().get('", utils.getIdProperty(object.columns), "'), '", object.table, "');\n"))
+        _file.write("\t}\n")
+        _file.write("});")
+        _file.end();
+    })
+
+    deferred.resolve(true);
+    return deferred.promise;  
+
+};
+
+exports.createFormController = function(object){
+
+};
 
 /*{
     "success": true,
@@ -585,6 +837,11 @@ exports.createViewFilterForm = function(object){
                     "default": null
                 },
                 {
+                    "input": "combo",
+                    "displayField": "",
+                    "valueField": "",
+                    "store": "lista",
+                    "params:" "nombre: 'A'",
                     "number": 3,
                     "name": "modelo_departamento_id",
                     "attnum": 3,

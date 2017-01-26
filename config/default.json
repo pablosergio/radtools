@@ -25,15 +25,20 @@
   	"context": "app.context"
   },
   "CLASS_EXTJS": {
+    "controller": "Deft.mvc.ViewController",
   	"model": "Ext.data.Model",
   	"panel": "Ext.panel.Panel",
-  	"model": "Ext.data.Model"
+    "form": "Ext.form.Panel"
   },
   "CLASS_ABSTRACT": {
+    "controller": "app.controller.abstract.AbstractController",
+    "gridController": "app.controller.abstract.AbstractGridController",
+    "formController": "app.controller.abstract.AbstractFormController",
     "store": "app.store.abstract.AbstractStore",
     "context": "app.context.abstract.AbstractContext",
     "grid": "app.view.abstract.AbstractGrid",
-    "form": "app.view.abstract.AbstractForm"
+    "form": "app.view.abstract.AbstractForm",
+    "filterWindow": "app.view.abstract.AbstractFilterWindow"
   },
   "TOKEN": {
     "key": "appToken"
@@ -65,5 +70,8 @@
   			"west": "20%"
   		}
   	}
+  },
+  "PARAMS": {
+    "queryParam": "contains"
   }
 }

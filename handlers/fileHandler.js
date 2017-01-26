@@ -22,6 +22,9 @@ var fileHandler = function() {
     this.createMainPanel = handleCreateMainPanelRequest;
     this.createGrid = handleCreateGridRequest;
     this.createForm = handleCreateFormRequest;
+    this.createFilterForm = handleCreateFilterFormRequest;
+    this.createMainPanelController = handleCreateMainPanelControllerRequest;
+    this.createGridController = handleCreateGridControllerRequest;
 }
 
 function handleCreateModelRequest(req, res, next) {
@@ -109,6 +112,45 @@ function handleCreateGridRequest(req, res, next) {
 function handleCreateFormRequest(req, res, next) {
     var params = req.body
     var _file = fileService.createForm(params).then(function(result){
+        res.status(200).send({
+            success: true,
+        })
+    }, function(err){
+        res.status(500);
+        res.send(err);
+        return next(new Error(err));
+    })
+}
+
+function handleCreateFilterFormRequest(req, res, next) {
+    var params = req.body
+    var _file = fileService.createFilterForm(params).then(function(result){
+        res.status(200).send({
+            success: true,
+        })
+    }, function(err){
+        res.status(500);
+        res.send(err);
+        return next(new Error(err));
+    })
+}
+
+function handleCreateMainPanelControllerRequest(req, res, next) {
+    var params = req.body
+    var _file = fileService.createMainPanelController(params).then(function(result){
+        res.status(200).send({
+            success: true,
+        })
+    }, function(err){
+        res.status(500);
+        res.send(err);
+        return next(new Error(err));
+    })
+}
+
+function handleCreateGridControllerRequest(req, res, next) {
+    var params = req.body
+    var _file = fileService.createGridController(params).then(function(result){
         res.status(200).send({
             success: true,
         })

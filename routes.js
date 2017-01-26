@@ -27,8 +27,11 @@ function setup(router, handlers) {
     router.post('/service',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createService);
     router.post('/context',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createContext);
     router.post('/mainPanel',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createMainPanel);
+    router.post('/mainPanelController',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createMainPanelController);
     router.post('/grid',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createGrid);
+    router.post('/gridController',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createGridController);
     router.post('/form',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createForm);
+    router.post('/filterForm',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createFilterForm);
 }
 
 exports.setup = setup;
