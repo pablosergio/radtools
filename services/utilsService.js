@@ -1,11 +1,56 @@
 /**
- * Created by Vanessa on 2/1/2017.
+ * Created by Vanessa on startInject17.
  */
 /**
  * Created by Sergio on 10/12/2016.
  */
 var _  = require('lodash');
   cfg  = require('config');
+   fs  = require('fs')
+
+exports.findLine = function(filename, annotation1, annotation2, match){
+    var _this = this;
+    var found = false;
+    //var filename = cfg.PATH.context.concat("/Application.js"), '/');
+    var data = fs.readFileSync(filename).toString().split("\n");
+    var startInjectLine = 0;
+    var endInjectLine = 0;
+    var data = fs.readFileSync(filename).toString().split("\n");
+    for (var i = 0; i < data.length; i++) {
+        if(data[i].indexOf(annotation1) > 0){
+            startInjectLine = i;
+            endInjectLine = startInjectLine + 1;
+        }
+        if(data[i].indexOf(annotation2) > 0){
+            endInjectLine = i;
+        }
+    }
+
+    for (var i = 0; i < data.length; i++) {
+        if(data[i].indexOf(match) > 0){
+            if(i > startInjectLine && i < endInjectLine){
+                found = true;    
+            }
+        }
+    }
+    
+    return found;
+};
+
+exports.injectPackage = function(filename, annotation, package){
+    var _this = this;
+    var lineNumber;
+    //var filename = cfg.PATH.context.concat("/Application.js"), '/');
+    var data = fs.readFileSync(filename).toString().split("\n");
+    for (var i = 0; i < data.length; i++) {
+        if(data[i].indexOf(annotation) > 0){
+            lineNumber = i + 1;
+        }
+    }
+    data.splice(lineNumber, 0, package);
+    var text = data.join("\n");
+    fs.writeFileSync(filename, text)
+};
 
 exports.getType = function(type){
     var field = {

@@ -137,7 +137,11 @@ module.exports = function(connection){
                 if(err) {
                     deferred.reject(err);
                 }
-                deferred.resolve(result);
+                deferred.resolve({
+                    table: filter.table,
+                    columns: result.rows,
+                    total: result.count
+                });
             });
         });
 

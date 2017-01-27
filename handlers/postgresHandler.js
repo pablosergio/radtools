@@ -108,7 +108,8 @@ function handleGetListColumnsRequest(req, res, next) {
     service.getListColumns(params, paging, order).then(function(result){
         res.status(200).send({
             success: true,
-            rows: result.rows,
+            table: result.table,
+            columns: result.columns,
             total: result.count
         })
     }, function(err){

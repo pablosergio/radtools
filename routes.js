@@ -32,6 +32,7 @@ function setup(router, handlers) {
     router.post('/gridController',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createGridController);
     router.post('/form',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createForm);
     router.post('/filterForm',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createFilterForm);
+    router.post('/formController',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createFormController);
 }
 
 exports.setup = setup;

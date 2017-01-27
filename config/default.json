@@ -73,5 +73,14 @@
   },
   "PARAMS": {
     "queryParam": "contains"
+  },
+  "FILE": {
+    "application": "D:/tempo/app/Application.js"
+  },
+  "ANNOTATION": {
+    "application": {
+      "startInject": "@start inject",
+      "endInject": "@end inject"
+    }
   }
 }
