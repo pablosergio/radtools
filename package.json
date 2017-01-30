@@ -18,6 +18,7 @@
   ],
   "author": "Pablo S. Alvarado G. (serpaal@yahoo.es)",
   "dependencies": {
+    "app-root-path": "^2.0.1",
     "bluebird": "^3.4.7",
     "body-parser": "^1.14.2",
     "config": "^1.19.0",
@@ -32,6 +33,7 @@
     "jsonwebtoken": "^7.2.1",
     "lodash": "^4.17.2",
     "multiline": "^1.0.2",
+    "node-cmd": "^1.2.0",
     "pg": "^6.1.0",
     "pg-promise": "^5.5.0",
     "q": "^1.4.1",

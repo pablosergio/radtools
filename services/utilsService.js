@@ -287,8 +287,8 @@ exports.convertToTextField = function(field, size, identation, isFilterForm){
     var _this = this;
     var label = field.name.toUpperCase();
         label = label.replace(/_/gi, ' ');
+    if(field.foreignkey)
         label = label.replace(/ID/gi, '');
-    
     var _identation ="";
     for (var i = 0; i < identation; i++) {
         _identation += "\t";
@@ -309,7 +309,10 @@ exports.convertToTextField = function(field, size, identation, isFilterForm){
     textfield = textfield.concat(_identation, "\tmargin: 10,\n");
     textfield = textfield.concat(_identation, "\tmaxLength: ", size ? size : 250,",\n");
     textfield = textfield.concat(_identation, "\tenforceMaxLength: true,\n");
-    textfield = textfield.concat(_identation, "\thidden: ", field.hidden || false, ",\n");
+    if(field.primarykey == 't')
+        textfield = textfield.concat(_identation, "\thidden: true,\n");
+    else    
+        textfield = textfield.concat(_identation, "\thidden: ", field.hidden || false, ",\n");
     textfield = textfield.concat(_identation, "\treadOnly: ", field.readOnly || false, ",\n");
     textfield = textfield.concat(_identation, "\tmaskRe: ", field.maskRe || null, ",\n");
     textfield = textfield.concat(_identation, "\tregex: ", field.regex || null, ",\n");
@@ -322,8 +325,8 @@ exports.convertToNumberField = function(field, size, identation, isFilterForm){
     var _this = this;
     var label = field.name.toUpperCase();
         label = label.replace(/_/gi, ' ');
+    if(field.foreignkey)
         label = label.replace(/ID/gi, '');
-    
     var _identation ="";
     for (var i = 0; i < identation; i++) {
         _identation += "\t";
@@ -344,7 +347,10 @@ exports.convertToNumberField = function(field, size, identation, isFilterForm){
     numberfield = numberfield.concat(_identation, "\tmargin: 10,\n");
     numberfield = numberfield.concat(_identation, "\tmaxLength: ", size ? size : 250,",\n");
     numberfield = numberfield.concat(_identation, "\tenforceMaxLength: true,\n");
-    
+    if(field.primarykey == 't')
+        numberfield = numberfield.concat(_identation, "\thidden: true,\n");
+    else    
+        numberfield = numberfield.concat(_identation, "\thidden: ", field.hidden || false, ",\n");
     numberfield = numberfield.concat(_identation, "},\n");
 
     return numberfield;
@@ -354,8 +360,8 @@ exports.convertToDateField = function(field, formatdate, identation, isFilterFor
     var _this = this;
     var label = field.name.toUpperCase();
         label = label.replace(/_/gi, ' ');
+    if(field.foreignkey)
         label = label.replace(/ID/gi, '');
-    
     var _identation ="";
     for (var i = 0; i < identation; i++) {
         _identation += "\t";
@@ -374,6 +380,10 @@ exports.convertToDateField = function(field, formatdate, identation, isFilterFor
         datefield = datefield.concat(_identation, "\tafterLabelTextTpl: this.getRequiredStyle(),\n");
     }
     datefield = datefield.concat(_identation, "\tmargin: 10,\n");
+    if(field.primarykey == 't')
+        datefield = datefield.concat(_identation, "\thidden: true,\n");
+    else    
+        datefield = datefield.concat(_identation, "\thidden: ", field.hidden || false, ",\n");
     datefield = datefield.concat(_identation, "},\n");
     return datefield;
 };
@@ -382,8 +392,8 @@ exports.convertToComboBox = function(field, identation, isFilterForm){
     var _this = this;
     var label = field.name.toUpperCase();
         label = label.replace(/_/gi, ' ');
+    if(field.foreignkey)
         label = label.replace(/ID/gi, '');
-    
     var _identation ="";
     for (var i = 0; i < identation; i++) {
         _identation += "\t";

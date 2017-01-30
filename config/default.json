@@ -4,16 +4,28 @@
       "fileName" : "api-error-logs.log",
       "logsDirectory" : "logs"
     },
+    "templates": {
+      "templatesDirectory": "templates" 
+    },
     "success": "Proceso ejecutado satisfactoriamente"
   },
+  "BACKEND_PATH": {
+    "handlers": "D:/test/app/backend/handlers",
+    "services": "D:/test/app/backend/services",
+    "store": "D:/test/app/frontend/app/store",
+    "service": "D:/test/app/frontend/app/service",
+    "view": "D:/test/app/frontend/app/view",
+    "controller": "D:/test/app/frontend/app/controller",
+    "context": "D:/test/app/frontend/app/context"
+  },
   "PATH": {
-  	"app": "D:/tempo/app",
-  	"model": "D:/tempo/app/model",
-  	"store": "D:/tempo/app/store",
-  	"service": "D:/tempo/app/service",
-  	"view": "D:/tempo/app/view",
-  	"controller": "D:/tempo/app/controller",
-  	"context": "D:/tempo/app/context"
+  	"app": "D:/test/app/frontend/app",
+  	"model": "D:/test/app/frontend/app/model",
+  	"store": "D:/test/app/frontend/app/store",
+  	"service": "D:/test/app/frontend/app/service",
+  	"view": "D:/test/app/frontend/app/view",
+  	"controller": "D:/test/app/frontend/app/controller",
+  	"context": "D:/test/app/frontend/app/context"
   },
   "WORKSPACE": {
   	"app": "app",
@@ -44,7 +56,7 @@
     "key": "appToken"
   },
   "PROXY_STORE": {
-    "type": "ajax",
+    "type": "rest",
     "reader": {
       "type": "json",
       "root": "rows",
@@ -75,12 +87,17 @@
     "queryParam": "contains"
   },
   "FILE": {
-    "application": "D:/tempo/app/Application.js"
+    "application": "D:/test/app/frontend/app/Application.js",
+    "appConfig": "D:/test/app/frontend/app/config/AppConfig.js"
   },
   "ANNOTATION": {
     "application": {
       "startInject": "@start inject",
       "endInject": "@end inject"
+    },
+    "appConfig": {
+      "addEndpoint": "@add endpoints",
+      "endEndpoint": "@end endpoints"
     }
   }
 }

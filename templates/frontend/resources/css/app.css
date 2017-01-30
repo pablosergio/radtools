@@ -1,0 +1,429 @@
+.x-mask.splashscreen {
+	background-color: white;
+	opacity: 1;
+}
+
+.x-mask-msg.splashscreen,
+.x-mask-msg.splashscreen div {
+	font-size: 16px;
+	font-weight: bold;
+	padding: 30px 5px 5px 5px;
+	border: none;
+	background-color: transparent;
+	background-position: top center;
+}
+
+.x-message-box .x-window-body .x-box-inner {
+	min-height: 110px !important;
+}
+
+.x-splash-icon {
+	background-image: url('../images/logo.png') !important;
+	margin-top: -50px;
+	margin-bottom: 15px;
+	height: 270px;
+	width: 230px;
+}
+
+/****************************/
+/* Add your own styles here. */
+
+.mousepointer { cursor: pointer; }
+
+.add-icon {
+    background: url('../icons/add.png');
+}
+
+.delete-icon {
+    background: url('../icons/delete.png');
+}
+
+.save-icon {
+    background: url('../icons/disk.png');
+}
+
+.cancel-icon {
+    background: url('../icons/control_stop.png');
+}
+
+.copy-icon {
+    background: url('../icons/copy.png');
+}
+
+.editorWithMargin {
+    margin-top: 4px;
+}
+
+.sglm-logo {
+    margin: 2px 16px 4px 8px !important;
+    display: block !important;
+}
+
+.sglm-header {
+    font-size: 25px !important;
+    padding: 12px 0px 0px 0px !important;
+}
+
+.phoenix-header-small {
+    font-size: 16px !important;
+    font-family: Helvetica;
+    padding: 18px 0px 0px 18px !important;
+}
+
+.Terrible {
+    background-color: #FF6666 !important;
+    color: black !important;
+}
+
+.Poor {
+    background-color: #FF9966 !important;
+}
+
+.Marginal {
+    background-color: #FFFF99 !important;
+    color: black !important;
+}
+
+.Good {
+    background-color: #CCFF99 !important;
+}
+
+.Great {
+    background-color: #99FF66 !important;
+}
+
+.Excellent {
+    background-color: #00CC00 !important;
+}
+
+.ux-required-field {
+    color: red;
+    font-weight: bold;
+}
+
+.ux-notification-window .x-window-body {
+	text-align: center;
+	padding: 15px 5px 15px 5px;
+	width: 200px;
+}
+
+.ux-notification-icon-success {
+	background-image: url('../icons/accept.png');
+}
+
+.ux-notification-icon-info {
+	background-image: url('../icons/info.png');
+}
+
+.ux-notification-icon-error {
+	background-image: url('../icons/error.png');
+}
+
+.ux-notification-success .x-window-header {
+	background-color: transparent;
+}
+
+body .ux-notification-success {
+	background-color: #A8EDA8;
+}
+
+.ux-notification-success .x-window-body {
+	text-align: center;
+	padding: 15px 5px 18px 5px;
+	width: 200px;
+	background-color: #E8FFE8;
+	border: 0px solid white;
+}
+
+.ux-notification-info .x-window-header {
+	background-color: transparent;
+}
+
+.ux-notification-info .x-window-body {
+	text-align: center;
+	padding: 15px 5px 18px 5px;
+	width: 200px;
+}
+
+.ux-notification-error .x-window-header {
+	background-color: transparent;
+}
+
+body .ux-notification-error {
+	background-color: #FFA3A3;
+}
+
+.ux-notification-error .x-window-body {
+	text-align: center;
+	padding: 15px 5px 18px 5px;
+	width: 200px;
+	background-color: #FFE0E0;
+	border: 0px solid white;
+}
+
+.x-grid-empty-custom {
+    width: auto;
+    text-align: center;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    font-weight: bold;
+}
+
+.x-grid-center-icon {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.x-action-col-cell {
+    padding-top: 2px; !important
+}
+
+.x-grid-with-row-lines .x-grid-cell-inner {
+    overflow: hidden;
+    padding: 6px 4px;
+    white-space: nowrap;
+}
+
+#titleHeader {
+	color: #000;
+	font-size: 20px;
+	font-weight: bold;
+	font-family: 'Lucida Grande', Arial, Sans;
+}
+
+div.carousel-div{
+	width:100%;
+	height:100%;
+	background:rgba(225, 233, 243, 0.5);
+}
+
+.read-only{    
+ background-color:gray;
+ background:yellow;
+ background-image: none !important;
+}
+
+.DisabledClase input {
+        background: #D7D7D7;
+}
+.DisabledClase textarea {
+        background: #D7D7D7;
+}
+
+.ReadOnlyClass input {
+    background: #FDF6B1;
+}
+
+.ReadOnlyClass textarea {
+    background: #FDF6B1;
+}
+
+.content {
+	float: left;
+	padding: 0 5px 0 0;
+}
+.ext-ux-clearbutton {
+    width: 12px;
+    height: 12px;
+    background-image: url(../images/clear-text-icon.gif);
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    -moz-user-focus: ignore; /* https://developer.mozilla.org/en/CSS/-moz-user-focus */
+    cursor: pointer;
+    position: absolute;
+    overflow:  hidden; /* IE 6 :-( */
+    margin-top: 4px;
+    background-color: white;
+}
+
+.ext-ux-clearbutton-mouse-over-input {
+    background-position: 0 -12px;
+}
+
+.ext-ux-clearbutton-mouse-over-button {
+    background-position: 0 -24px;
+}
+
+.ext-ux-clearbutton-mouse-down {
+    background-position: 0 -36px;
+}
+
+.ext-ux-clearbutton-on {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity .35s linear;
+    -webkit-transition: opacity .35s linear;
+    -moz-transition: opacity .35s linear;
+    -o-transition: opacity .35s linear;
+    -ms-transition: opacity .35s linear;
+    -khtml-transition: opacity .35s linear;
+}
+
+.ext-ux-clearbutton-off {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .35s linear, visibility .0s linear .35s;
+    -webkit-transition: opacity .35s linear, visibility .0s linear .35s;
+    -moz-transition: opacity .35s linear, visibility .0s linear .35s;
+    -o-transition: opacity .35s linear, visibility .0s linear .35s;
+    -ms-transition: opacity .35s linear, visibility .0s linear .35s;
+    -khtml-transition: opacity .35s linear, visibility .0s linear .35s;
+}
+
+/*no borrar por favor */
+/*es el estilo para el itemselector*/
+
+.x-form-multiselect-body .x-boundlist .x-mask {
+    background: none;
+}
+
+.x-form-itemselector-body .x-form-item {
+    margin: 0;
+}
+
+.x-form-itemselector-top {
+    background-image: url(../icons/top2.gif);
+}
+.x-form-itemselector-up {
+    background-image: url(../icons/up2.gif);
+}
+.x-form-itemselector-add {
+    background-image: url(../icons/right2.gif);
+}
+.x-form-itemselector-remove {
+    background-image: url(../icons/left2.gif);
+}
+.x-form-itemselector-down {
+    background-image: url(../icons/down2.gif);
+}
+.x-form-itemselector-bottom {
+    background-image: url(../icons/bottom2.gif);
+}
+
+.btnEliminarGrupo {
+    -moz-box-shadow:inset 0px 39px 0px -24px #e67a73;
+    -webkit-box-shadow:inset 0px 39px 0px -24px #e67a73;
+    box-shadow:inset 0px 39px 0px -24px #e67a73;
+    background-color:#e4685d;
+    -moz-border-radius:3px;
+    -webkit-border-radius:3px;
+    border-radius:3px;
+    border:1px solid #ffffff;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-family:Arial;
+    font-size:12px;
+    padding:1px 1px;
+    text-decoration:none;
+    text-shadow:0px 1px 0px #b23e35;
+}
+.btnEliminarGrupo:hover {
+    background-color:#eb675e;
+}
+.btnEliminarGrupo:active {
+    position:relative;
+    top:1px;
+}
+
+.masOscuro .x-grid-cell {
+    background-color: red !important;
+    color: white;
+},
+
+.fileUpload {
+    position: relative;
+    overflow: hidden;
+}
+.fileUpload input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    opacity: 0;
+}
+
+.button-secondary {
+    color: white;
+    border-radius: 4px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    display: block;
+    height: 26px;
+    width: 96px;
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-bottom: 5px;
+    /*background: #34696f;
+    /*border: 2px solid rgba(33, 68, 72, 0.59);*/
+}
+
+.button-secondary {
+    background: rgb(66, 184, 221); /* this is a light blue */
+}
+
+.button-small {
+    font-size: 85%;
+}
+/* icon actioncolumn dynamic */
+.x-action-col-cell img.icon-lock {
+     background-image: url(../icons/lock.png) !important;
+}
+.x-action-col-cell img.icon-unlock {
+    background-image: url(../icons/lock_open.png) !important;
+}
+
+/* estilos para filas Grid Solicitudes */
+.solicitud-anulado .x-grid-cell {
+    /*background-color: #DD4E4D !important;*/
+    color: #DD4E4D;
+    font-weight: bold;
+}
+.solicitud-aprobado .x-grid-cell {
+    /*background-color: #DFF2BF !important;*/
+    /*color: #FE7627;*/
+    /*color: #17307E;*/
+    color: #2C6936;
+    font-weight: bold;
+}
+.solicitud-finalizado .x-grid-cell {
+    background-color: /*#003366#F59E00*/#DFF2BF !important;
+    color: /*#ffffff*/#1b2426;
+    font-weight: bold;
+}
+.solicitud-cerrado .x-grid-cell {
+    background-color: /*#0D181C*/#444444 !important;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* estilos para filas de grid ordenes de trabajo de acuero al estado estado */
+.trabajo-rechazado .x-grid-cell {
+  /*background-color: #FFB0C4 !important;*/
+    background-color: #FE8484 !important;
+    color: #ffffff;
+    font-weight: bold;
+}
+.trabajo-con-ejecucion .x-grid-cell {
+    background-color: #ffebb0 !important;
+}
+.trabajo-success .x-grid-cell {
+  /*color: #4F8A10;*/
+  color: #1b2426;
+  background-color: #DFF2BF !important;
+}
+.trabajo-entregado .x-grid-cell {
+  color: #ffffff;
+  background-color: /*#1b2426*/#444444 !important;
+}
+/* Grid multiline */
+.x-grid-row .x-grid-cell-inner {
+    white-space: normal;
+}
+.x-grid-row-over .x-grid-cell-inner {
+    font-weight: bold;
+    white-space: normal;
+}

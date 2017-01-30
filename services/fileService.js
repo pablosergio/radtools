@@ -8,8 +8,47 @@ var _     = require('lodash'),
     utils = require('./utilsService.js'),
 multiline = require('multiline'),
       cfg = require("config"),
+     path = require('path'),
+  appRoot = require('app-root-path'),
 beautify  = require('js-beautify').js_beautify;
 
+exports.createApplication = function(object){
+    var deferred = q.defer();
+    var cmd = require('node-cmd');
+    try {
+        var appDir = object.path;
+        shell.mkdir('-p', appDir);
+        var folderBackend = appRoot.path + '\\' + cfg.get("COMMON.templates.templatesDirectory") + '\\' + "backend";
+        var folderFrontend = appRoot.path + '\\' + cfg.get("COMMON.templates.templatesDirectory") + '\\' + "frontend";
+        //shell.cp('-r', folderBackend, appDir);
+        //shell.cp('-r', folderFrontend, appDir);
+        var filename = appDir.concat("/backend/config/env/.development");
+        fs.truncate(filename, 0, function(){
+            var _file = fs.createWriteStream(filename, {
+                flags: 'a'
+            })
+            _file.write("TOKEN_SECRET=developmentSessionSecret\n")
+            _file.write("DB_USER=".concat(object.dbusername, "\n"))
+            _file.write("DB_PASS=".concat(object.dbpassword, "\n"))
+            _file.write("DATA_BASE=".concat(object.database, "\n"))
+            _file.write("DB_DIALECT=postgres\n")
+            _file.write("DB_PORT=".concat(object.port, "\n"))
+            _file.write("DB_SCHEMA=".concat(object.schema, "\n"))
+            _file.write("DB_SERVER=".concat(object.host, "\n"))
+            _file.end();
+        })
+        var dirModel = appDir.concat("/backend/model");
+        var command ="spgen -h ".concat(object.host, " ", object.port, " -s ", object.schema, " -d ", object.database,  " -u ", object.dbusername, " -p ", object.dbpassword, " -o ", dirModel, " -t sequelize4");  
+        cmd.run(command)    
+        deferred.resolve(true);
+    }
+    catch(error){
+        deferred.reject(false);
+    }
+    finally{
+        return deferred.promise;
+    }
+};
 
 exports.createModel = function(object){
     var deferred = q.defer();
@@ -32,11 +71,11 @@ exports.createModel = function(object){
                 _file.write("\t\t'" + dependencia + "',\n")
             });
             _file.write("\t],\n")
-            _file.write("\tidProperty: '".concat(utils.getIdProperty(object.columns), "',\n"))
+            //_file.write("\tidProperty: '".concat(utils.getIdProperty(object.columns), "',\n"))
             _file.write("\tfields: [\n")
             object.columns.forEach(function(column){
                 var field = "\t\t{ name: '";
-                _file.write(field.concat(column.name, "' type: '", utils.getType(column.type).type, "'"))
+                _file.write(field.concat(column.name, "', type: '", utils.getType(column.type).type, "'"))
                 if(column.primarykey == 't'){
                     _file.write(", useNull: true")
                 }else if(column.default){
@@ -157,9 +196,15 @@ exports.createStore = function(object){
             _file.end();
         })
         var package = "\t\t\t".concat(utils.toCamelCase(object.table), "Store: '", namespace, "',");
+        var endpoint = "\t\t\t\t".concat(utils.toCamelCase(object.table), ": {\n\t\t\t\t\tproxyId: '/", utils.toCamelCase(object.table), "'\n\t\t\t\t},");
+        
         if(!utils.findLine(cfg.FILE.application, cfg.ANNOTATION.application.startInject, cfg.ANNOTATION.application.endInject, namespace)){
             utils.injectPackage(cfg.FILE.application, cfg.ANNOTATION.application.startInject, package);
         }
+        if(!utils.findLine(cfg.FILE.appConfig, cfg.ANNOTATION.appConfig.addEndpoint, cfg.ANNOTATION.appConfig.endEndpoint, utils.toCamelCase(object.table))){
+            utils.injectPackage(cfg.FILE.appConfig, cfg.ANNOTATION.appConfig.addEndpoint, endpoint);
+        }
+        
         deferred.resolve(true);
     }
     catch (error){
@@ -201,7 +246,7 @@ exports.createService = function(object){
             _file.write("\t\tif (cfg == null) {\n")
             _file.write("\t\t\tcfg = {};\n")
             _file.write("\t\t}\n")
-            _file.write("\t\tthis.initConfig(config);\n")
+            _file.write("\t\tthis.initConfig(cfg);\n")
             _file.write("\t\treturn this.callParent(arguments);\n")
             _file.write("\t},\n")
             _file.write("\n")
@@ -234,7 +279,7 @@ exports.createService = function(object){
             _file.write("\t/* Return: promise records of ".concat(utils.toCamelCase(object.table, true), " */\n"))
             _file.write("\tfind".concat(utils.toCamelCase(object.table, true), ": function(params) {\n"))
             _file.write("\t\tvar deferred;\n")
-            _file.write("\t\tvar store = Ext.create('".concat(cfg.WORKSPACE, ".store.", utils.toCamelCase(object.table),".", utils.toCamelCase(object.table, true), "Store');\n"))
+            _file.write("\t\tvar store = Ext.create('".concat(cfg.WORKSPACE.store, ".store.", utils.toCamelCase(object.table),".", utils.toCamelCase(object.table, true), "Store');\n"))
             _file.write("\t\tdeferred = Ext.create('Deft.promise.Deferred');\n")
             _file.write("\t\tstore.proxy.extraParams = params;\n")
             _file.write("\t\tstore.load({\n")
@@ -258,7 +303,7 @@ exports.createService = function(object){
             _file.write("\tsave".concat(utils.toCamelCase(object.table, true), ": function(", utils.toCamelCase(object.table), ") {\n"))
             _file.write("\t\tif(this.isNew".concat(utils.toCamelCase(object.table, true), "(", utils.toCamelCase(object.table),")) {\n"))
             _file.write("\t\t\tthis.get".concat(utils.toCamelCase(object.table, true), "Store().add(", utils.toCamelCase(object.table),");\n"))
-            _file.write("\t\t},\n")
+            _file.write("\t\t}\n")
             _file.write("\t\treturn this.sync".concat(utils.toCamelCase(object.table, true), "Store();\n"))
             _file.write("\t},\n")
             _file.write("\n")
@@ -268,7 +313,7 @@ exports.createService = function(object){
             _file.write("\t/* Params: params = Objet ".concat(utils.toCamelCase(object.table, true), " */\n")) 
             _file.write("\t/* Return: Run sync".concat(utils.toCamelCase(object.table, true), "Store() */\n"))
             _file.write("\tdelete".concat(utils.toCamelCase(object.table, true), ": function(", utils.toCamelCase(object.table), ") {\n"))
-            _file.write("\t\t\tthis.get".concat(utils.toCamelCase(object.table, true), "().remove(", utils.toCamelCase(object.table),");\n"))
+            _file.write("\t\tthis.get".concat(utils.toCamelCase(object.table, true), "().remove(", utils.toCamelCase(object.table),");\n"))
             _file.write("\t\treturn this.sync".concat(utils.toCamelCase(object.table, true), "Store();\n"))
             _file.write("\t},\n")
             _file.write("\n")
@@ -460,7 +505,7 @@ exports.createMainPanel = function(object){
                 _file.write("\t\t{\n")
                 _file.write("\t\t\txtype: '".concat(utils.toCamelCase(object.table), "-form',\n"))
                 _file.write("\t\t\tregion: 'east',\n")
-                _file.write("\t\t\twidth: '".concat(cfg.WIDTH.panel.region.east, "'\n"))
+                _file.write("\t\t\twidth: '".concat(cfg.WIDTH.panel.region.east, "',\n"))
                 _file.write("\t\t\tcollapsible: true,\n")
                 _file.write("\t\t\titemId: 'panelCollapsible".concat(utils.toCamelCase(object.table, true), "'\n"))
                 _file.write("\t\t},\n")        
@@ -515,6 +560,9 @@ exports.createGrid = function(object){
                 _file.write(utils.convertToColumn(column).concat("\n"))
             });
             _file.write("\t\t\t]\n")
+            _file.write("\t\t});\n")
+            _file.write("\t\treturn this.callParent(arguments);\n")
+            _file.write("\t},\n")
             _file.write("});")
             _file.end();
         })
@@ -581,6 +629,9 @@ exports.createForm = function(object){
                 });    
             }
             _file.write("\t\t\t]\n")
+            _file.write("\t\t});\n")
+            _file.write("\t\treturn this.callParent(arguments);\n")
+            _file.write("\t},\n")
             _file.write("});")
             _file.end();
         })
@@ -638,6 +689,9 @@ exports.createFilterForm = function(object){
                 });    
             }
             _file.write("\t\t\t]\n")
+            _file.write("\t\t});\n")
+            _file.write("\t\treturn this.callParent(arguments);\n")
+            _file.write("\t},\n")
             _file.write("});")
             _file.end();
         })
@@ -762,6 +816,7 @@ exports.createGridController = function(object){
             _file.write("\tcontrol: {\n")
             _file.write("\t\tview: {\n")
             _file.write("\t\t\tboxready: 'loadInitialData',\n")
+            _file.write("\t\t\tselect: 'onSelectRecord',\n")
             _file.write("\t\t},\n")
             _file.write("\t\tbtnAddRecord: {\n")
             _file.write("\t\t\tclick: 'onAddRecordClick'\n")
@@ -940,7 +995,7 @@ exports.createFormController = function(object){
             _file.write("\tobserve: {\n")
             _file.write("\t\t".concat(utils.toCamelCase(object.table), "Context: {\n"))
             //_file.write("\t\t\t".concat(utils.toCamelCase(object.table), "Created: 'onCollapsePanel',\n"))
-            _file.write("\t\t\t".concat(utils.toCamelCase(object.table), "Opened: 'on", utils.toCamelCase(object.table, true), "',\n"))
+            _file.write("\t\t\t".concat(utils.toCamelCase(object.table), "Opened: 'on", utils.toCamelCase(object.table, true), "Opened',\n"))
             //_file.write("\t\t\t".concat(utils.toCamelCase(object.table), "Canceled: 'onCollapsePanel',\n"))
             //_file.write("\t\t\t".concat(utils.toCamelCase(object.table), "Deleted: 'onCollapsePanel'\n"))
             _file.write("\t\t}\n")
@@ -967,7 +1022,7 @@ exports.createFormController = function(object){
             _file.write("\t},\n")
             
             _file.write("\tloadInitialData: function() {\n")
-            _file.write("\t\t_this = this;\n")
+            _file.write("\t\tvar _this = this;\n")
             _file.write("\t\t_this.getSaveButton().setVisible(false);\n")
             _file.write("\t\t_this.getCopyButton().setVisible(false);\n")
             _file.write("\t\t_this.getEditButton().setVisible(false);\n")
@@ -1068,6 +1123,194 @@ exports.createFormController = function(object){
         return deferred.promise;  
     }
 };
+
+exports.createHandler = function(object){
+    var deferred = q.defer();
+    try {
+        var path = cfg.BACKEND_PATH.handlers.concat("/"/*, utils.toCamelCase(object.table), '/'*/);
+        shell.mkdir('-p', path);
+        var filename = path.concat(utils.toCamelCase(object.table), "Handler.js");
+        console.log(filename);
+        fs.truncate(filename, 0, function(){
+           var _file = fs.createWriteStream(filename, {
+                flags: 'a' 
+            })
+            _file.write("var ".concat(utils.toCamelCase(object.table), "Service = require('../services/", utils.toCamelCase(object.table), "Service.js');\n"))
+            _file.write("var tokenService       = require('../services/tokenService');\n")
+            _file.write("var jwt                = require('jsonwebtoken');\n")
+            _file.write("var cfg                = require('config');\n")
+            _file.write("var _                  = require('lodash');\n")
+            _file.write("var filterService      = require('../services/filterService');\n")      
+            _file.write("\n")    
+            _file.write("var ".concat(utils.toCamelCase(object.table), "Handler = function() {\n"))
+            _file.write("\tthis.get".concat(utils.toCamelCase(object.table, true), "= handleGet", utils.toCamelCase(object.table, true), "Request;\n"))
+            _file.write("\tthis.create".concat(utils.toCamelCase(object.table, true), "= handleCreate", utils.toCamelCase(object.table, true), "Request;\n"))
+            _file.write("\tthis.update".concat(utils.toCamelCase(object.table, true), "= handleUpdate", utils.toCamelCase(object.table, true), "Request;\n"))
+            _file.write("\tthis.delete".concat(utils.toCamelCase(object.table, true), "= handleDelete", utils.toCamelCase(object.table, true), "Request;\n"))
+            _file.write("}\n")
+            _file.write("\n")
+            _file.write("function handleGet".concat(utils.toCamelCase(object.table, true), "Request(req, res, next) {\n"))
+            _file.write("\tvar token = tokenService.getToken(req);\n")
+            _file.write("\tvar payload = jwt.decode(token, {complete: true}).payload;\n")
+            _file.write("\tvar ".concat(utils.toCamelCase(object.table), "= filterService.removeKeysNull(req.query);\n"))
+            _file.write("\tvar paging = {\n")
+            _file.write("\t\tlimit: req.query.limit || 1000,\n")
+            _file.write("\t\tstart: req.query.start || 0\n")
+            _file.write("\t};\n")
+            _file.write("\tvar order = '\"' + req.query.sort + '\"' + ' ' +  req.query.dir;\n")
+            _file.write("\tvar service = ".concat(utils.toCamelCase(object.table), "Service({username: payload.username, password: payload.password});\n"))
+            _file.write("\tservice.getAll".concat(utils.toCamelCase(object.table, true), "(", utils.toCamelCase(object.table),", paging, order).then(function(result){\n"))
+            _file.write("\t\tres.status(200).send({\n")
+            _file.write("\t\t\tsuccess: true,\n")
+            _file.write("\t\t\trows: result.rows,\n")
+            _file.write("\t\t\ttotal: result.count\n")
+            _file.write("\t\t})\n")
+            _file.write("\t}, function(err){\n")
+            _file.write("\t\tres.status(500);\n")
+            _file.write("\t\tres.send(err);\n")
+            _file.write("\t\treturn next(new Error(err));\n")
+            _file.write("\t})\n")
+            _file.write("}\n")
+            _file.write("\n")
+            _file.write("function handleCreate".concat(utils.toCamelCase(object.table, true), "Request(req, res, next) {\n"))
+            _file.write("\tvar token = tokenService.getToken(req);\n")
+            _file.write("\tvar payload = jwt.decode(token, {complete: true}).payload;\n")
+            _file.write("\tvar service = ".concat(utils.toCamelCase(object.table), "Service({username: payload.username, password: payload.password});\n"))
+            _file.write("\tservice.create".concat(utils.toCamelCase(object.table, true), "(req.body).then(function(result){\n"))
+            _file.write("\t\tres.status(201).send({\n")
+            _file.write("\t\t\tsuccess: true,\n")
+            _file.write("\t\t\tdata: result,\n")
+            _file.write("\t\t\tmsg: cfg.get('COMMON.success')\n") 
+            _file.write("\t\t})\n")
+            _file.write("\t}, function(err){\n")
+            _file.write("\t\tres.status(500);\n")
+            _file.write("\t\tres.send(err);\n")
+            _file.write("\t\treturn next(new Error(err));\n")
+            _file.write("\t})\n")
+            _file.write("}\n")
+            _file.write("\n")
+            _file.write("function handleUpdate".concat(utils.toCamelCase(object.table, true), "Request(req, res, next) {\n"))
+            _file.write("\tvar token = tokenService.getToken(req);\n")
+            _file.write("\tvar payload = jwt.decode(token, {complete: true}).payload;\n")
+            _file.write("\tvar service = ".concat(utils.toCamelCase(object.table), "Service({username: payload.username, password: payload.password});\n"))
+            _file.write("\tservice.update".concat(utils.toCamelCase(object.table, true), "(req.body).then(function(result){\n"))
+            _file.write("\t\tres.status(201).send({\n")
+            _file.write("\t\t\tsuccess: true,\n")
+            _file.write("\t\t\tdata: result,\n")
+            _file.write("\t\t\tmsg: cfg.get('COMMON.success')\n") 
+            _file.write("\t\t})\n")
+            _file.write("\t}, function(err){\n")
+            _file.write("\t\tres.status(500);\n")
+            _file.write("\t\tres.send(err);\n")
+            _file.write("\t\treturn next(new Error(err));\n")
+            _file.write("\t})\n")
+            _file.write("}\n")
+            _file.write("\n")
+            _file.write("function handleDelete".concat(utils.toCamelCase(object.table, true), "Request(req, res, next) {\n"))
+            _file.write("\tvar token = tokenService.getToken(req);\n")
+            _file.write("\tvar payload = jwt.decode(token, {complete: true}).payload;\n")
+            _file.write("\tvar service = ".concat(utils.toCamelCase(object.table), "Service({username: payload.username, password: payload.password});\n"))
+            _file.write("\tservice.delete".concat(utils.toCamelCase(object.table, true), "(req.body).then(function(result){\n"))
+            _file.write("\t\tres.status(201).send({\n")
+            _file.write("\t\t\tsuccess: true,\n")
+            _file.write("\t\t\tdata: result,\n")
+            _file.write("\t\t\tmsg: cfg.get('COMMON.success')\n") 
+            _file.write("\t\t})\n")
+            _file.write("\t}, function(err){\n")
+            _file.write("\t\tres.status(500);\n")
+            _file.write("\t\tres.send(err);\n")
+            _file.write("\t\treturn next(new Error(err));\n")
+            _file.write("\t})\n")
+            _file.write("}\n")
+            _file.write("\n")
+
+            _file.write("module.exports = ".concat(utils.toCamelCase(object.table), "Handler;"))
+            _file.end();
+        })
+        deferred.resolve(true);
+    }
+    catch(error){
+        deferred.reject(false);
+    }
+    finally {
+        return deferred.promise;  
+    }
+};
+
+exports.createBackendService = function(object){
+    var deferred = q.defer();
+    try {
+        var path = cfg.BACKEND_PATH.services.concat("/"/*, utils.toCamelCase(object.table), '/'*/);
+        shell.mkdir('-p', path);
+        var filename = path.concat(utils.toCamelCase(object.table), 'Service.js'); /* Nombre de Archivo formato Capitalize */
+        fs.truncate(filename, 0, function(){
+           var _file = fs.createWriteStream(filename, {
+                flags: 'a' 
+            })
+            _file.write("var q = require('q');\n")
+            _file.write("\n")
+            _file.write("module.exports = function(connection){\n")
+            _file.write("\tvar db = require('../model');\n")
+            _file.write("\tdb.setup(process.env.DATA_BASE, connection.username, connection.password, {\n")
+            _file.write("\t\thost: process.env.DB_SERVER,\n")
+            _file.write("\t\tlogging: false,\n")
+            _file.write("\t\tnative: false\n")
+            _file.write("\t});\n")
+            _file.write("\n")
+            _file.write("\tvar ".concat(utils.toCamelCase(object.table), "= db.model('public.", utils.toCamelCase(object.table), "');\n"))
+            object.columns.forEach(function(column){
+                if(column.foreignkey){
+                    _file.write("\tvar ".concat(utils.toCamelCase(column.foreignkey), "= db.model('public.", utils.toCamelCase(column.foreignkey), "');\n"))
+                }
+            })
+            _file.write("\n")
+            _file.write("\tvar getAll".concat(utils.toCamelCase(object.table, true), "= function(filter, paging, order){\n"))
+            _file.write("\t\treturn ".concat(utils.toCamelCase(object.table), ".findAndCountAll({\n"))
+            _file.write("\t\t\twhere: filter,\n")
+            _file.write("\t\t\tlimit: paging.limit,\n")
+            _file.write("\t\t\toffset: paging.start,\n")
+            _file.write("\t\t\torder: order,\n")
+            _file.write("\t\t\tinclude: [\n")
+            object.columns.forEach(function(column){
+                if(column.foreignkey){
+                    _file.write("\t\t\t\t{ model: ".concat(utils.toCamelCase(column.foreignkey),", as: '", utils.toCamelCase(column.foreignkey), "'},\n"))
+                }
+            })
+            _file.write("\t\t\t]\n")
+            _file.write("\t\t})\n")
+            _file.write("\t}\n")
+            _file.write("\n")
+            _file.write("\tvar create".concat(utils.toCamelCase(object.table, true), "= function(_", utils.toCamelCase(object.table), "){\n"))
+            _file.write("\t\treturn ".concat(utils.toCamelCase(object.table), ".create(_", utils.toCamelCase(object.table), ");\n"))
+            _file.write("\t};\n")
+            _file.write("\n")
+            _file.write("\tvar update".concat(utils.toCamelCase(object.table, true), "= function(_", utils.toCamelCase(object.table), "){\n"))
+            _file.write("\t\treturn ".concat(utils.toCamelCase(object.table), ".update(_", utils.toCamelCase(object.table), ", { where: { ", utils.getIdProperty(object.columns), ": ", utils.toCamelCase(object.table), ".", utils.getIdProperty(object.columns), "}});\n"))
+            _file.write("\t};\n")
+            _file.write("\n")
+            _file.write("\tvar delete".concat(utils.toCamelCase(object.table, true), "= function(_", utils.toCamelCase(object.table), "){\n"))
+            _file.write("\t\treturn ".concat(utils.toCamelCase(object.table), ".destroy(_", utils.toCamelCase(object.table), ", { where: { ", utils.getIdProperty(object.columns), ": ", utils.toCamelCase(object.table), ".", utils.getIdProperty(object.columns), "}});\n"))
+            _file.write("\t};\n")
+            _file.write("\n")
+            _file.write("\treturn {\n")
+            _file.write("\t\tgetAll".concat(utils.toCamelCase(object.table, true), ": getAll", utils.toCamelCase(object.table, true), ",\n"))
+            _file.write("\t\tcreate".concat(utils.toCamelCase(object.table, true), ": create", utils.toCamelCase(object.table, true), ",\n"))
+            _file.write("\t\tupdate".concat(utils.toCamelCase(object.table, true), ": update", utils.toCamelCase(object.table, true), ",\n"))
+            _file.write("\t\tdelete".concat(utils.toCamelCase(object.table, true), ": delete", utils.toCamelCase(object.table, true), ",\n"))
+            _file.write("\t}\n")
+            _file.write("};")    
+            _file.end();
+        })
+        deferred.resolve(true);
+    }
+    catch(error){
+        deferred.reject(false);
+    }
+    finally {
+        return deferred.promise;  
+    }
+};
+
 
 /*{
     "success": true,
@@ -1284,5 +1527,232 @@ exports.createFormController = function(object){
         }
     ]
 }
+
+{
+  "path": "D:/test/app",  
+  "host": "localhost",
+  "port": 5432,
+  "schema": "public",
+  "database": "sacec",
+  "dbusername": "palvarado",
+  "dbpassword": "palvarado",
+  "success": true,
+    "grid": true,
+    "form": true,
+    "table": "departamentos",
+    "fieldsets": [
+        {
+           "name": "Formulario1",
+            "title": "FieldSet1",
+            "columns": 2,
+            "fields": [
+                {
+                    "number": 1,
+                    "name": "departamento_id",
+                    "attnum": 1,
+                    "notnull": true,
+                    "type": "integer",
+                    "primarykey": "t",
+                    "uniquekey": "f",
+                    "foreignkey": null,
+                    "foreignkey_fieldnum": null,
+                    "foreignkey_connnum": null,
+                    "default": "nextval('departamentos_departamento_id_seq'::regclass)"
+                },
+                {
+                    "number": 2,
+                    "name": "nombre",
+                    "attnum": 2,
+                    "notnull": false,
+                    "type": "character varying(50)",
+                    "primarykey": "f",
+                    "uniquekey": "f",
+                    "foreignkey": null,
+                    "foreignkey_fieldnum": null,
+                    "foreignkey_connnum": null,
+                    "default": null
+                },
+                {
+                    "input": "combo",
+                    "displayField": "nombre",
+                    "valueField": "modelo_departamento_id",
+                    "store": "lista",
+                    "params" : "nombre",
+                    "number": 3,
+                    "name": "modelo_departamento_id",
+                    "attnum": 3,
+                    "notnull": false,
+                    "type": "integer",
+                    "primarykey": "f",
+                    "uniquekey": "f",
+                    "foreignkey": "modelo_departamento",
+                    "foreignkey_fieldnum": [
+                        1
+                    ],
+                    "foreignkey_connnum": [
+                        3
+                    ],
+                    "default": null,
+                  "fields": [
+                    { "name" : "tipo"},
+                    { "name" : "superficie"},
+                    { "name" : "numero_habitantes"}
+                  ]
+                }
+            ]
+        },
+        {
+            "name": "Formulario2",
+            "title": "FieldSet2",
+            "columns": 2,
+            "fields": [
+                {
+                    "number": 1,
+                    "name": "departamento_id",
+                    "attnum": 1,
+                    "notnull": true,
+                    "type": "integer",
+                    "primarykey": "t",
+                    "uniquekey": "f",
+                    "foreignkey": null,
+                    "foreignkey_fieldnum": null,
+                    "foreignkey_connnum": null,
+                    "default": "nextval('departamentos_departamento_id_seq'::regclass)"
+                },
+                {
+                    "number": 2,
+                    "name": "nombre",
+                    "attnum": 2,
+                    "notnull": false,
+                    "type": "character varying(50)",
+                    "primarykey": "f",
+                    "uniquekey": "f",
+                    "foreignkey": null,
+                    "foreignkey_fieldnum": null,
+                    "foreignkey_connnum": null,
+                    "default": null
+                },
+                {
+                    "number": 3,
+                    "name": "modelo_departamento_id",
+                    "attnum": 3,
+                    "notnull": false,
+                    "type": "integer",
+                    "primarykey": "f",
+                    "uniquekey": "f",
+                    "foreignkey": "modelo_departamento",
+                    "foreignkey_fieldnum": [
+                        1
+                    ],
+                    "foreignkey_connnum": [
+                        3
+                    ],
+                    "default": null,
+                  "fields": [
+                    { "name" : "tipo"},
+                    { "name" : "superficie"},
+                    { "name" : "numero_habitantes"}
+                  ]
+                }
+            ]  
+        }
+    ],
+    "columns": [
+        {
+            "number": 1,
+            "name": "departamento_id",
+            "attnum": 1,
+            "notnull": true,
+            "type": "integer",
+            "primarykey": "t",
+            "uniquekey": "f",
+            "foreignkey": null,
+            "foreignkey_fieldnum": null,
+            "foreignkey_connnum": null,
+            "default": "nextval('departamentos_departamento_id_seq'::regclass)"
+        },
+        {
+            "number": 2,
+            "name": "nombre",
+            "attnum": 2,
+            "notnull": false,
+            "type": "character varying(50)",
+            "primarykey": "f",
+            "uniquekey": "f",
+            "foreignkey": null,
+            "foreignkey_fieldnum": null,
+            "foreignkey_connnum": null,
+            "default": null
+        },
+        {
+            "number": 3,
+            "name": "modelo_departamento_id",
+            "attnum": 3,
+            "notnull": false,
+            "type": "integer",
+            "primarykey": "f",
+            "uniquekey": "f",
+            "foreignkey": "modelo_departamento",
+            "foreignkey_fieldnum": [
+                1
+            ],
+            "foreignkey_connnum": [
+                3
+            ],
+            "default": null,
+          "fields": [
+            { "name" : "tipo"},
+            { "name" : "superficie"},
+            { "name" : "numero_habitantes"}
+          ]
+        },
+        {
+            "number": 4,
+            "name": "propietario_id",
+            "attnum": 4,
+            "notnull": false,
+            "type": "integer",
+            "primarykey": "f",
+            "uniquekey": "f",
+            "foreignkey": "propietarios",
+            "foreignkey_fieldnum": [
+                1
+            ],
+            "foreignkey_connnum": [
+                4
+            ],
+            "default": null
+           
+        },
+        {
+            "number": 5,
+            "name": "cantidad_habitantes",
+            "attnum": 5,
+            "notnull": false,
+            "type": "integer",
+            "primarykey": "f",
+            "uniquekey": "f",
+            "foreignkey": null,
+            "foreignkey_fieldnum": null,
+            "foreignkey_connnum": null,
+            "default": null
+        },
+        {
+            "number": 6,
+            "name": "fecha_registro",
+            "attnum": 6,
+            "notnull": false,
+            "type": "timestamp without time zone",
+            "primarykey": "f",
+            "uniquekey": "f",
+            "foreignkey": null,
+            "foreignkey_fieldnum": null,
+            "foreignkey_connnum": null,
+            "default": "now()"
+        }
+    ]
+}
+
+
 */
 

@@ -1,0 +1,1 @@
+Ext.override(Ext.data.proxy.Ajax, { timeout: 120000 });

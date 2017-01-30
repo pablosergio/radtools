@@ -1,0 +1,8 @@
+TOKEN_SECRET=developmentSessionSecret
+DB_USER=palvarado
+DB_PASS=palvarado
+DATA_BASE=sacec
+DB_DIALECT=postgres
+DB_PORT=5432
+DB_SCHEMA=public
+DB_SERVER=localhost

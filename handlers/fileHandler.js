@@ -15,6 +15,7 @@ var filterService      = require('../services/filterService');
 var _                  = require('lodash');
 
 var fileHandler = function() {
+    this.createApplication = handleCreateApplicationRequest;
     this.createModel = handleCreateModelRequest;
     this.createStore = handleCreateStoreRequest;
     this.createService = handleCreateServiceRequest;
@@ -26,6 +27,23 @@ var fileHandler = function() {
     this.createMainPanelController = handleCreateMainPanelControllerRequest;
     this.createGridController = handleCreateGridControllerRequest;
     this.createFormController = handleCreateFormControllerRequest;
+    this.createHandler = handleCreateHandlerRequest;
+    this.createBackendService = handleCreateBackendServiceRequest;
+}
+
+function handleCreateApplicationRequest(req, res, next) {
+    var params = req.body
+    var _file = fileService.createApplication(params).then(function(result){
+        res.status(200).send({
+            success: true,
+            //rows: result.rows,
+            //total: result.count
+        })
+    }, function(err){
+        res.status(500);
+        res.send(err);
+        return next(new Error(err));
+    })
 }
 
 function handleCreateModelRequest(req, res, next) {
@@ -165,6 +183,32 @@ function handleCreateGridControllerRequest(req, res, next) {
 function handleCreateFormControllerRequest(req, res, next) {
     var params = req.body
     var _file = fileService.createFormController(params).then(function(result){
+        res.status(200).send({
+            success: true,
+        })
+    }, function(err){
+        res.status(500);
+        res.send(err);
+        return next(new Error(err));
+    })
+}
+
+function handleCreateHandlerRequest(req, res, next) {
+    var params = req.body
+    var _file = fileService.createHandler(params).then(function(result){
+        res.status(200).send({
+            success: true,
+        })
+    }, function(err){
+        res.status(500);
+        res.send(err);
+        return next(new Error(err));
+    })
+}
+
+function handleCreateBackendServiceRequest(req, res, next) {
+    var params = req.body
+    var _file = fileService.createBackendService(params).then(function(result){
         res.status(200).send({
             success: true,
         })

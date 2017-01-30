@@ -20,7 +20,8 @@ function setup(router, handlers) {
     router.get('/schemas', jwt({secret: process.env.TOKEN_SECRET}), handlers.postgres.getListSchemas);
     router.get('/tables', jwt({secret: process.env.TOKEN_SECRET}), handlers.postgres.getListTables);
     router.get('/columns', jwt({secret: process.env.TOKEN_SECRET}), handlers.postgres.getListColumns);
-
+    /* Create App Base */
+    router.post('/createApplication',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createApplication);
     /* Write Files */
     router.post('/model',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createModel);
     router.post('/store',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createStore);
@@ -33,6 +34,9 @@ function setup(router, handlers) {
     router.post('/form',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createForm);
     router.post('/filterForm',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createFilterForm);
     router.post('/formController',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createFormController);
-}
+    /* Files Backend */
+    router.post('/createHandler',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createHandler);
+    router.post('/createBackendService',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createBackendService);
+}   
 
 exports.setup = setup;
