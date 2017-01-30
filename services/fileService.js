@@ -12,16 +12,20 @@ multiline = require('multiline'),
   appRoot = require('app-root-path'),
 beautify  = require('js-beautify').js_beautify;
 
-exports.createApplication = function(object){
+exports.createBaseApplication = function(object){
     var deferred = q.defer();
     var cmd = require('node-cmd');
     try {
-        var appDir = object.path;
+        var appDir = object.path_application.concat('/', object.name_application);
         shell.mkdir('-p', appDir);
         var folderBackend = appRoot.path + '\\' + cfg.get("COMMON.templates.templatesDirectory") + '\\' + "backend";
         var folderFrontend = appRoot.path + '\\' + cfg.get("COMMON.templates.templatesDirectory") + '\\' + "frontend";
+        /* Copy base application for backend */
         //shell.cp('-r', folderBackend, appDir);
+        /* Copy base application for frontend */
         //shell.cp('-r', folderFrontend, appDir);
+        
+        /* SET CONFIG TO CONNECT DATA BASE BACKEND */
         var filename = appDir.concat("/backend/config/env/.development");
         fs.truncate(filename, 0, function(){
             var _file = fs.createWriteStream(filename, {
@@ -30,15 +34,16 @@ exports.createApplication = function(object){
             _file.write("TOKEN_SECRET=developmentSessionSecret\n")
             _file.write("DB_USER=".concat(object.dbusername, "\n"))
             _file.write("DB_PASS=".concat(object.dbpassword, "\n"))
-            _file.write("DATA_BASE=".concat(object.database, "\n"))
+            _file.write("DATA_BASE=".concat(object.data_base, "\n"))
             _file.write("DB_DIALECT=postgres\n")
             _file.write("DB_PORT=".concat(object.port, "\n"))
-            _file.write("DB_SCHEMA=".concat(object.schema, "\n"))
+            _file.write("DB_SCHEMA=".concat(object.db_schema, "\n"))
             _file.write("DB_SERVER=".concat(object.host, "\n"))
             _file.end();
         })
         var dirModel = appDir.concat("/backend/model");
-        var command ="spgen -h ".concat(object.host, " ", object.port, " -s ", object.schema, " -d ", object.database,  " -u ", object.dbusername, " -p ", object.dbpassword, " -o ", dirModel, " -t sequelize4");  
+        var fileConfig = appRoot.path + "\\config\\spgen\\default.js";
+        var command ="spgen -h ".concat(object.host, " ", object.port, " -s ", object.db_schema, " -d ", object.data_base,  " -u ", object.dbusername, " -p ", object.dbpassword, " -o ", dirModel, " -t sequelize4");  
         cmd.run(command)    
         deferred.resolve(true);
     }

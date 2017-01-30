@@ -15,7 +15,7 @@ var filterService      = require('../services/filterService');
 var _                  = require('lodash');
 
 var fileHandler = function() {
-    this.createApplication = handleCreateApplicationRequest;
+    this.createBaseApplication = handleCreateBaseApplicationRequest;
     this.createModel = handleCreateModelRequest;
     this.createStore = handleCreateStoreRequest;
     this.createService = handleCreateServiceRequest;
@@ -31,9 +31,9 @@ var fileHandler = function() {
     this.createBackendService = handleCreateBackendServiceRequest;
 }
 
-function handleCreateApplicationRequest(req, res, next) {
+function handleCreateBaseApplicationRequest(req, res, next) {
     var params = req.body
-    var _file = fileService.createApplication(params).then(function(result){
+    var _file = fileService.createBaseApplication(params).then(function(result){
         res.status(200).send({
             success: true,
             //rows: result.rows,

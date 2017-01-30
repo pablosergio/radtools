@@ -16,6 +16,7 @@ var loginHandler = require('./handlers/loginHandler');
 var listaHandler = require('./handlers/listaHandler');
 var postgresHandler = require('./handlers/postgresHandler');
 var fileHandler = require('./handlers/fileHandler');
+var applicationHandler = require('./handlers/applicationHandler');
 
 var routes = require('./routes');
 var bodyParser = require('body-parser');
@@ -66,7 +67,8 @@ var handlers = {
     login: new loginHandler(),
     lista: new listaHandler(),
     postgres: new postgresHandler(),
-    files: new fileHandler()
+    files: new fileHandler(),
+    application: new applicationHandler()
 };
 
 function start() {

@@ -1,0 +1,28 @@
+{
+    "public.menu_opciones": {
+        "belongsTo": {
+            "related_opcion_padre": null
+        },
+        "belongsToMany": {
+            "related_usuario_menu_opciones_menu_opcion_id_fkey_usernames": null
+        },
+        "hasMany": {
+            "opcion_padre_fkeys": null,
+            "usuario_menu_opciones_menu_opcion_id_fkeys": null
+        }
+    },
+    "public.usuario_menu_opciones": {
+        "belongsTo": {
+            "menu_opcion": null,
+            "related_username": null
+        }
+    },
+    "public.usuarios": {
+        "belongsToMany": {
+            "usuario_menu_opciones_username_fkey_menu_opcions": null
+        },
+        "hasMany": {
+            "usuario_menu_opciones_username_fkeys": null
+        }
+    }
+}
