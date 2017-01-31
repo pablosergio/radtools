@@ -42,7 +42,7 @@ exports.createBaseApplication = function(object){
             _file.end();
         })
         var dirModel = appDir.concat("/backend/model");
-        var fileConfig = appRoot.path + "\\config\\spgen\\default.js";
+        //var fileConfig = appRoot.path + "\\config\\spgen\\default.js";
         var command ="spgen -h ".concat(object.host, " ", object.port, " -s ", object.db_schema, " -d ", object.data_base,  " -u ", object.dbusername, " -p ", object.dbpassword, " -o ", dirModel, " -t sequelize4");  
         cmd.run(command)    
         deferred.resolve(true);

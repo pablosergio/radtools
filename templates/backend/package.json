@@ -1,5 +1,5 @@
 {
-  "name": "sacec",
+  "name": "app",
   "version": "1.0.0",
   "description": "Node js common rest API. Sistema de Administracion y Cobranza Expensas en Condominios",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pablosergio/backend-sacec.git"
+    "url": "git+https://github.com/pablosergio/backend-app.git"
   },
   "keywords": [
     "NodeJS",

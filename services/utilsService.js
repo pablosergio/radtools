@@ -230,6 +230,7 @@ exports.convertToForm = function(columns, fields, title, icon, identation, isFil
     form = form.concat(_identation,"\t\tcolor: '#888',\n");
     form = form.concat(_identation,"\t\tborder:'1px solid #E4E4E4'\n");
     form = form.concat(_identation,"\t},\n");
+    form = form.concat(_identation,"\tborder: null,\n");
     form = form.concat(_identation,"\tlabelStyle: 'font-weight:bold;font-size:10px!important;',\n");
     form = form.concat(_identation,"\ticonCls: ", _icon, ",\n");
     form = form.concat(_identation,"\tlayout: {\n");
