@@ -16,27 +16,29 @@ function setup(router, handlers) {
     router.get('/listabytipo', jwt({secret: process.env.TOKEN_SECRET}), handlers.lista.getListaByTipo);
 
     /* Routes for lista DataBases from server Postgres */
-    router.get('/databases', jwt({secret: process.env.TOKEN_SECRET}), handlers.postgres.getListDataBase);
-    router.get('/schemas', jwt({secret: process.env.TOKEN_SECRET}), handlers.postgres.getListSchemas);
-    router.get('/tables', jwt({secret: process.env.TOKEN_SECRET}), handlers.postgres.getListTables);
-    router.get('/columns', jwt({secret: process.env.TOKEN_SECRET}), handlers.postgres.getListColumns);
+    router.get('/postgres/databases', jwt({secret: process.env.TOKEN_SECRET}), handlers.postgres.getListDataBase);
+    router.get('/postgres/schemas', jwt({secret: process.env.TOKEN_SECRET}), handlers.postgres.getListSchemas);
+    router.get('/postgres/tables', jwt({secret: process.env.TOKEN_SECRET}), handlers.postgres.getListTables);
+    router.get('/postgres/columns', jwt({secret: process.env.TOKEN_SECRET}), handlers.postgres.getListColumns);
     /* Create App Base */
-    router.post('/createApplication',jwt({secret: process.env.TOKEN_SECRET}), handlers.application.createApplication, handlers.files.createBaseApplication);
+    router.post('/application/create',jwt({secret: process.env.TOKEN_SECRET}), handlers.application.createApplication, handlers.files.createBaseApplication);
+    router.post('/application/tables',jwt({secret: process.env.TOKEN_SECRET}), handlers.application.findById, handlers.postgres.getListTables);
+    router.post('/application/table/columns',jwt({secret: process.env.TOKEN_SECRET}), handlers.application.findById, handlers.postgres.getListColumns);
     /* Write Files */
-    router.post('/model',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createModel);
-    router.post('/store',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createStore);
-    router.post('/service',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createService);
-    router.post('/context',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createContext);
-    router.post('/mainPanel',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createMainPanel);
-    router.post('/mainPanelController',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createMainPanelController);
-    router.post('/grid',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createGrid);
-    router.post('/gridController',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createGridController);
-    router.post('/form',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createForm);
-    router.post('/filterForm',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createFilterForm);
-    router.post('/formController',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createFormController);
+    router.post('/file/frontend/model',jwt({secret: process.env.TOKEN_SECRET}), handlers.application.findById, handlers.files.createModel);
+    router.post('/file/frontend/store',jwt({secret: process.env.TOKEN_SECRET}), handlers.application.findById, handlers.files.createStore);
+    router.post('/file/frontend/service',jwt({secret: process.env.TOKEN_SECRET}), handlers.application.findById, handlers.files.createService);
+    router.post('/file/frontend/context',jwt({secret: process.env.TOKEN_SECRET}), handlers.application.findById, handlers.files.createContext);
+    router.post('/file/frontend/mainPanel',jwt({secret: process.env.TOKEN_SECRET}), handlers.application.findById, handlers.files.createMainPanel);
+    router.post('/file/frontend/mainPanelController',jwt({secret: process.env.TOKEN_SECRET}), handlers.application.findById, handlers.files.createMainPanelController);
+    router.post('/file/frontend/grid',jwt({secret: process.env.TOKEN_SECRET}), handlers.application.findById, handlers.files.createGrid);
+    router.post('/file/frontend/gridController',jwt({secret: process.env.TOKEN_SECRET}), handlers.application.findById, handlers.files.createGridController);
+    router.post('/file/frontend/form',jwt({secret: process.env.TOKEN_SECRET}), handlers.application.findById, handlers.files.createForm);
+    router.post('/file/frontend/filterForm',jwt({secret: process.env.TOKEN_SECRET}), handlers.application.findById, handlers.files.createFilterForm);
+    router.post('/file/frontend/formController',jwt({secret: process.env.TOKEN_SECRET}), handlers.application.findById, handlers.files.createFormController);
     /* Files Backend */
-    router.post('/createHandler',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createHandler);
-    router.post('/createBackendService',jwt({secret: process.env.TOKEN_SECRET}), handlers.files.createBackendService);
+    router.post('/file/backend/handler',jwt({secret: process.env.TOKEN_SECRET}), handlers.application.findById, handlers.files.createHandler);
+    router.post('/file/backend/service',jwt({secret: process.env.TOKEN_SECRET}), handlers.application.findById, handlers.files.createBackendService);
 }   
 
 exports.setup = setup;

@@ -58,7 +58,7 @@ exports.createBaseApplication = function(object){
 exports.createModel = function(object){
     var deferred = q.defer();
     try {
-        var path = cfg.PATH.model.concat('/', utils.toCamelCase(object.table), '/');
+        var path = object.pathApplication.concat('/', object.nameApplication, cfg.PATH.model, '/', utils.toCamelCase(object.table), '/');
         shell.mkdir('-p', path);
         var filename = path.concat(utils.toCamelCase(object.table, true), 'Model.js'); /* Nombre de Archivo formato camelCase Capitalize */
         var namespace = cfg.WORKSPACE.model.concat(".", utils.toCamelCase(object.table), ".", utils.toCamelCase(object.table, true), "Model");
@@ -130,7 +130,7 @@ exports.createModel = function(object){
 exports.createStore = function(object){
     var deferred = q.defer();
     try {
-        var path = cfg.PATH.store.concat('/', utils.toCamelCase(object.table), '/');
+        var path = object.pathApplication.concat('/', object.nameApplication, cfg.PATH.store, '/', utils.toCamelCase(object.table), '/');
         shell.mkdir('-p', path);
 
         var filename = path.concat(utils.toCamelCase(object.table, true), 'Store.js'); /* Nombre de Archivo formato Capitalize */
@@ -203,11 +203,11 @@ exports.createStore = function(object){
         var package = "\t\t\t".concat(utils.toCamelCase(object.table), "Store: '", namespace, "',");
         var endpoint = "\t\t\t\t".concat(utils.toCamelCase(object.table), ": {\n\t\t\t\t\tproxyId: '/", utils.toCamelCase(object.table), "'\n\t\t\t\t},");
         
-        if(!utils.findLine(cfg.FILE.application, cfg.ANNOTATION.application.startInject, cfg.ANNOTATION.application.endInject, namespace)){
-            utils.injectPackage(cfg.FILE.application, cfg.ANNOTATION.application.startInject, package);
+        if(!utils.findLine(object.pathApplication.concat('/', object.nameApplication, cfg.FILE.application), cfg.ANNOTATION.application.startInject, cfg.ANNOTATION.application.endInject, namespace)){
+            utils.injectPackage(object.pathApplication.concat('/', object.nameApplication, cfg.FILE.application), cfg.ANNOTATION.application.startInject, package);
         }
-        if(!utils.findLine(cfg.FILE.appConfig, cfg.ANNOTATION.appConfig.addEndpoint, cfg.ANNOTATION.appConfig.endEndpoint, utils.toCamelCase(object.table))){
-            utils.injectPackage(cfg.FILE.appConfig, cfg.ANNOTATION.appConfig.addEndpoint, endpoint);
+        if(!utils.findLine(object.pathApplication.concat('/', object.nameApplication, cfg.FILE.appConfig), cfg.ANNOTATION.appConfig.addEndpoint, cfg.ANNOTATION.appConfig.endEndpoint, utils.toCamelCase(object.table))){
+            utils.injectPackage(object.pathApplication.concat('/', object.nameApplication, cfg.FILE.appConfig), cfg.ANNOTATION.appConfig.addEndpoint, endpoint);
         }
         
         deferred.resolve(true);
@@ -223,7 +223,7 @@ exports.createStore = function(object){
 exports.createService = function(object){
     var deferred = q.defer();
     try {
-        var path = cfg.PATH.service.concat("/", utils.toCamelCase(object.table), '/');
+        var path = object.pathApplication.concat('/', object.nameApplication, cfg.PATH.service, '/', utils.toCamelCase(object.table), '/');
         shell.mkdir('-p', path);
 
         var filename = path.concat(utils.toCamelCase(object.table, true), 'Service.js'); /* Nombre de Archivo formato Capitalize */
@@ -363,8 +363,8 @@ exports.createService = function(object){
             _file.end();
         })
         var package = "\t\t\t".concat(utils.toCamelCase(object.table), "Service: '", namespace, "',");
-        if(!utils.findLine(cfg.FILE.application, cfg.ANNOTATION.application.startInject, cfg.ANNOTATION.application.endInject, namespace)){
-            utils.injectPackage(cfg.FILE.application, cfg.ANNOTATION.application.startInject, package);
+        if(!utils.findLine(object.pathApplication.concat('/', object.nameApplication, cfg.FILE.application), cfg.ANNOTATION.application.startInject, cfg.ANNOTATION.application.endInject, namespace)){
+            utils.injectPackage(object.pathApplication.concat('/', object.nameApplication, cfg.FILE.application), cfg.ANNOTATION.application.startInject, package);
         }
         deferred.resolve(true);
     }
@@ -379,7 +379,7 @@ exports.createService = function(object){
 exports.createContext = function(object){
     var deferred = q.defer();
     try{
-        var path = cfg.PATH.context.concat("/", utils.toCamelCase(object.table), '/');
+        var path = object.pathApplication.concat('/', object.nameApplication, cfg.PATH.context, '/', utils.toCamelCase(object.table), '/');
         shell.mkdir('-p', path);
 
         var filename = path.concat(utils.toCamelCase(object.table, true), 'Context.js'); /* Nombre de Archivo formato Capitalize */
@@ -456,8 +456,8 @@ exports.createContext = function(object){
             _file.end();
         })
         var package = "\t\t\t".concat(utils.toCamelCase(object.table), "Context: '", namespace, "',");
-        if(!utils.findLine(cfg.FILE.application, cfg.ANNOTATION.application.startInject, cfg.ANNOTATION.application.endInject, namespace)){
-            utils.injectPackage(cfg.FILE.application, cfg.ANNOTATION.application.startInject, package);
+        if(!utils.findLine(object.pathApplication.concat('/', object.nameApplication, cfg.FILE.application), cfg.ANNOTATION.application.startInject, cfg.ANNOTATION.application.endInject, namespace)){
+            utils.injectPackage(object.pathApplication.concat('/', object.nameApplication, cfg.FILE.application), cfg.ANNOTATION.application.startInject, package);
         }
         deferred.resolve(true);
     }
@@ -472,7 +472,7 @@ exports.createContext = function(object){
 exports.createMainPanel = function(object){
     var deferred = q.defer();
     try{
-        var path = cfg.PATH.view.concat("/", utils.toCamelCase(object.table), '/');
+        var path = object.pathApplication.concat('/', object.nameApplication, cfg.PATH.view, '/', utils.toCamelCase(object.table), '/');
         shell.mkdir('-p', path);
 
         var filename = path.concat(utils.toCamelCase(object.table, true), 'MainPanel.js'); /* Nombre de Archivo formato Capitalize */
@@ -532,7 +532,7 @@ exports.createMainPanel = function(object){
 exports.createGrid = function(object){
     var deferred = q.defer();
     try{
-        var path = cfg.PATH.view.concat("/", utils.toCamelCase(object.table), '/');
+        var path = object.pathApplication.concat('/', object.nameApplication, cfg.PATH.view, '/', utils.toCamelCase(object.table), '/');
         shell.mkdir('-p', path);
 
         var filename = path.concat(utils.toCamelCase(object.table, true), 'Grid.js'); /* Nombre de Archivo formato Capitalize */
@@ -585,7 +585,7 @@ exports.createForm = function(object){
     var deferred = q.defer();
     try {
         var isFilterForm = false;
-        var path = cfg.PATH.view.concat("/", utils.toCamelCase(object.table), '/');
+        var path = object.pathApplication.concat('/', object.nameApplication, cfg.PATH.view, '/', utils.toCamelCase(object.table), '/');
         shell.mkdir('-p', path);
 
         var filename = path.concat(utils.toCamelCase(object.table, true), 'Form.js'); /* Nombre de Archivo formato Capitalize */
@@ -654,7 +654,7 @@ exports.createFilterForm = function(object){
     var deferred = q.defer();
     try{
         var isFilterForm = true;
-        var path = cfg.PATH.view.concat("/", utils.toCamelCase(object.table), '/');
+        var path = object.pathApplication.concat('/', object.nameApplication, cfg.PATH.view, '/', utils.toCamelCase(object.table), '/');
         shell.mkdir('-p', path);
         var filename = path.concat(utils.toCamelCase(object.table, true), 'FilterForm.js'); 
         var namespace = cfg.WORKSPACE.view.concat(".", utils.toCamelCase(object.table), ".", utils.toCamelCase(object.table, true), "FilterForm")
@@ -714,7 +714,7 @@ exports.createFilterForm = function(object){
 exports.createMainPanelController = function(object){
     var deferred = q.defer();
     try {
-        var path = cfg.PATH.controller.concat("/", utils.toCamelCase(object.table), '/');
+        var path = object.pathApplication.concat('/', object.nameApplication, cfg.PATH.controller, '/', utils.toCamelCase(object.table), '/');
         shell.mkdir('-p', path);
         var filename = path.concat(utils.toCamelCase(object.table, true), 'MainPanelController.js'); /* Nombre de Archivo formato Capitalize */
         var namespace = cfg.WORKSPACE.controller.concat(".", utils.toCamelCase(object.table), ".", utils.toCamelCase(object.table, true), "MainPanelController")
@@ -782,7 +782,7 @@ exports.createMainPanelController = function(object){
 exports.createGridController = function(object){
     var deferred = q.defer();
     try {
-        var path = cfg.PATH.controller.concat("/", utils.toCamelCase(object.table), '/');
+        var path = object.pathApplication.concat('/', object.nameApplication, cfg.PATH.controller, '/', utils.toCamelCase(object.table), '/');
         shell.mkdir('-p', path);
 
         var filename = path.concat(utils.toCamelCase(object.table, true), 'GridController.js'); 
@@ -969,7 +969,7 @@ exports.createGridController = function(object){
 exports.createFormController = function(object){
     var deferred = q.defer();
     try {
-        var path = cfg.PATH.controller.concat("/", utils.toCamelCase(object.table), '/');
+        var path = object.pathApplication.concat('/', object.nameApplication, cfg.PATH.controller, '/', utils.toCamelCase(object.table), '/');
         shell.mkdir('-p', path);
 
         var filename = path.concat(utils.toCamelCase(object.table, true), 'FormController.js'); 
@@ -1132,7 +1132,8 @@ exports.createFormController = function(object){
 exports.createHandler = function(object){
     var deferred = q.defer();
     try {
-        var path = cfg.BACKEND_PATH.handlers.concat("/"/*, utils.toCamelCase(object.table), '/'*/);
+        var path = object.pathApplication.concat('/', object.nameApplication, cfg.BACKEND_PATH.handlers, '/');
+        //var path = cfg.BACKEND_PATH.handlers.concat("/"/*, utils.toCamelCase(object.table), '/'*/);
         shell.mkdir('-p', path);
         var filename = path.concat(utils.toCamelCase(object.table), "Handler.js");
         console.log(filename);
@@ -1245,7 +1246,7 @@ exports.createHandler = function(object){
 exports.createBackendService = function(object){
     var deferred = q.defer();
     try {
-        var path = cfg.BACKEND_PATH.services.concat("/"/*, utils.toCamelCase(object.table), '/'*/);
+        var path = object.pathApplication.concat('/', object.nameApplication, cfg.BACKEND_PATH.services, '/');
         shell.mkdir('-p', path);
         var filename = path.concat(utils.toCamelCase(object.table), 'Service.js'); /* Nombre de Archivo formato Capitalize */
         fs.truncate(filename, 0, function(){

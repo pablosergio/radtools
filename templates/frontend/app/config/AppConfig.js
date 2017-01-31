@@ -43,7 +43,7 @@ Ext.define("app.config.AppConfig", {
         login: {
           proxyId: "/login"
         },
-        
+        /* @end endpoints */
       },
       defaults: {
         urlPrefix: "http://localhost:8083/api",

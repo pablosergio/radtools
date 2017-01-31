@@ -28,6 +28,10 @@ module.exports = function(connection){
         })
     };
 
+    var findById = function(id){
+        return application.findById(id);
+    };
+
     var createApplication = function(_application){
           return application
             .create({
@@ -55,6 +59,7 @@ module.exports = function(connection){
 
     return {
         getApplication: getApplication,
+        findById: findById,
         createApplication: createApplication,
         updateApplication: updateApplication,
         deleteApplication: deleteApplication

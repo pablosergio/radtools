@@ -10,7 +10,7 @@ To modify this model:
 3. Use utility methods to easily access orm properties.
 
 "use strict";
-var orm     = require('models\index.js'),
+var orm     = require('model\index.js'),
     model   = require('./application.js'),
     util    = require('../utils.js')(model),
     Seq     = orm.Sequelize();

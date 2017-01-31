@@ -10,22 +10,17 @@
     "success": "Proceso ejecutado satisfactoriamente"
   },
   "BACKEND_PATH": {
-    "handlers": "D:/test/app/backend/handlers",
-    "services": "D:/test/app/backend/services",
-    "store": "D:/test/app/frontend/app/store",
-    "service": "D:/test/app/frontend/app/service",
-    "view": "D:/test/app/frontend/app/view",
-    "controller": "D:/test/app/frontend/app/controller",
-    "context": "D:/test/app/frontend/app/context"
+    "handlers": "/backend/handlers",
+    "services": "/backend/services"
   },
   "PATH": {
-  	"app": "D:/test/app/frontend/app",
-  	"model": "D:/test/app/frontend/app/model",
-  	"store": "D:/test/app/frontend/app/store",
-  	"service": "D:/test/app/frontend/app/service",
-  	"view": "D:/test/app/frontend/app/view",
-  	"controller": "D:/test/app/frontend/app/controller",
-  	"context": "D:/test/app/frontend/app/context"
+  	"app": "/frontend/app",
+  	"model": "/frontend/app/model",
+  	"store": "/frontend/app/store",
+  	"service": "/frontend/app/service",
+  	"view": "/frontend/app/view",
+  	"controller": "/frontend/app/controller",
+  	"context": "/frontend/app/context"
   },
   "WORKSPACE": {
   	"app": "app",
@@ -87,8 +82,8 @@
     "queryParam": "contains"
   },
   "FILE": {
-    "application": "D:/test/app/frontend/app/Application.js",
-    "appConfig": "D:/test/app/frontend/app/config/AppConfig.js"
+    "application": "/frontend/app/Application.js",
+    "appConfig": "/frontend/app/config/AppConfig.js"
   },
   "ANNOTATION": {
     "application": {
