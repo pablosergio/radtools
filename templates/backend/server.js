@@ -9,9 +9,9 @@
 // call the packages we need
 var express = require('express');        // call express
 var app = express();                 // define our app using express
-/* @require handler */
+/* @start require handler */
 var loginHandler = require('./handlers/loginHandler');
-
+/* @end require handler */
 var routes = require('./routes');
 var bodyParser = require('body-parser');
 var cors = require('cors');
@@ -58,8 +58,9 @@ app.use('/api', router);
 
 //Define route handlers
 var handlers = {
-    /* @add handlers*/
+    /* @add handlers */
     login: new loginHandler(),
+    /* @end handlers */
 };
 
 function start() {

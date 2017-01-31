@@ -83,7 +83,9 @@
   },
   "FILE": {
     "application": "/frontend/app/Application.js",
-    "appConfig": "/frontend/app/config/AppConfig.js"
+    "appConfig": "/frontend/app/config/AppConfig.js",
+    "routes": "/backend/routes.js",
+    "server": "/backend/server.js"
   },
   "ANNOTATION": {
     "application": {
@@ -93,6 +95,16 @@
     "appConfig": {
       "addEndpoint": "@add endpoints",
       "endEndpoint": "@end endpoints"
+    },
+    "routes": {
+      "addRoutes": "@add routes",
+      "endRoutes": "@end routes"
+    },
+    "server": {
+      "startRequireHandler": "@start require handler",
+      "endRequireHandler": "@end require handler",
+      "addHandlers": "@add handlers",
+      "endHandlers": "@end handlers"
     }
   }
 }

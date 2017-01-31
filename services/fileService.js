@@ -1233,6 +1233,22 @@ exports.createHandler = function(object){
             _file.write("module.exports = ".concat(utils.toCamelCase(object.table), "Handler;"))
             _file.end();
         })
+
+        var match = "/* Routes for " + utils.toCamelCase(object.table) + " */";
+        var routes = "\t/* Routes for " + utils.toCamelCase(object.table) + " */\n" +
+                    "\trouter.get('/" + utils.toCamelCase(object.table) + "', jwt({secret: process.env.TOKEN_SECRET}), handlers." + utils.toCamelCase(object.table) + ".get" + utils.toCamelCase(object.table, true) + ");\n" +
+                    "\trouter.post('/" + utils.toCamelCase(object.table) + "', jwt({secret: process.env.TOKEN_SECRET}), handlers." + utils.toCamelCase(object.table) + ".create" + utils.toCamelCase(object.table, true) + ");\n" +
+                    "\trouter.put('/" + utils.toCamelCase(object.table) + "', jwt({secret: process.env.TOKEN_SECRET}), handlers." + utils.toCamelCase(object.table) + ".update" + utils.toCamelCase(object.table, true) + ");\n" +
+                    "\trouter.delete('/" + utils.toCamelCase(object.table) + "', jwt({secret: process.env.TOKEN_SECRET}), handlers." + utils.toCamelCase(object.table) + ".delete" + utils.toCamelCase(object.table, true) + ");\n";
+    
+        var endpoint = "\t\t\t\t".concat(utils.toCamelCase(object.table), ": {\n\t\t\t\t\tproxyId: '/", utils.toCamelCase(object.table), "'\n\t\t\t\t},");
+        
+        if(!utils.findLine(object.pathApplication.concat('/', object.nameApplication, cfg.FILE.routes), cfg.ANNOTATION.routes.addRoutes, cfg.ANNOTATION.routes.endRoutes, match)){
+            utils.injectPackage(object.pathApplication.concat('/', object.nameApplication, cfg.FILE.routes), cfg.ANNOTATION.routes.addRoutes, routes);
+        }
+        /*if(!utils.findLine(object.pathApplication.concat('/', object.nameApplication, cfg.FILE.appConfig), cfg.ANNOTATION.appConfig.addEndpoint, cfg.ANNOTATION.appConfig.endEndpoint, utils.toCamelCase(object.table))){
+            utils.injectPackage(object.pathApplication.concat('/', object.nameApplication, cfg.FILE.appConfig), cfg.ANNOTATION.appConfig.addEndpoint, endpoint);
+        }*/
         deferred.resolve(true);
     }
     catch(error){

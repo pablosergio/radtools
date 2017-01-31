@@ -7,8 +7,9 @@ function setup(router, handlers) {
 
     // ROUTES FOR Common API
     // =============================================================================
-    /* @add route api */
+    /* @add routes */
     router.post('/login', handlers.login.authenticate);
+    /* @end routes */
 }
 
 exports.setup = setup;
