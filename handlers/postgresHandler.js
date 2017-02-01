@@ -12,10 +12,49 @@ var filterService      = require('../services/filterService');
 var _                  = require('lodash');
 
 var postgresHandler = function() {
+    this.createDataBase = handleCreateDataBaseRequest;
+    this.createBaseTables = handleCreateBaseTablesRequest;
     this.getListDataBase = handleGetListDataBaseRequest;
     this.getListSchemas = handleGetListSchemasRequest;
     this.getListTables = handleGetListTablesRequest;
     this.getListColumns = handleGetListColumnsRequest;
+}
+
+function handleCreateDataBaseRequest(req, res, next) {
+    var token = tokenService.getToken(req);
+    var payload = jwt.decode(token, {complete: true}).payload;
+    var params = req.body;
+    var service = postgresService({username: payload.username, password: payload.password});
+    //var service = postgresService(params);
+    service.createDataBase(params).then(function(result){
+        next();
+        /*res.status(200).send({
+            success: true,
+            msg: result
+        })*/
+    }, function(err){
+        res.status(500);
+        res.send(err);
+        return next(new Error(err));
+    })
+}
+
+function handleCreateBaseTablesRequest(req, res, next) {
+    var token = tokenService.getToken(req);
+    var payload = jwt.decode(token, {complete: true}).payload;
+    var params = req.body;
+    var service = postgresService({username: payload.username, password: payload.password});
+    //var service = postgresService(params);
+    service.createBaseTables(params).then(function(result){
+        res.status(200).send({
+            success: true,
+            msg: result
+        })
+    }, function(err){
+        res.status(500);
+        res.send(err);
+        return next(new Error(err));
+    })
 }
 
 function handleGetListDataBaseRequest(req, res, next) {

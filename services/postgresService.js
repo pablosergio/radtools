@@ -2,7 +2,8 @@
  * Created by Vanessa on 31/12/2016.
  */
 var q  = require('q'),
-   pg  = require('pg')
+   pg  = require('pg'),
+   pgtools = require('pgtools'),
    multiline = require('multiline');
 
 module.exports = function(connection){
@@ -14,6 +15,98 @@ module.exports = function(connection){
         port: connection.port, //env var: PGPORT
         max: 10, // max number of clients in the pool
         idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed
+    };
+
+    var createDataBase = function(params){
+        // This can also be a connection string
+        // (in which case the database part is ignored and replaced with postgres)
+        const CONFIG = {
+          user: params.username,
+          password: params.password,
+          port: params.port,
+          host: params.host
+        }
+
+        return pgtools.createdb(CONFIG, params.database);
+
+    };
+
+    var createBaseTables = function(params){
+        var deferred = q.defer();
+
+        var pool = new pg.Pool({
+            user: params.username,
+            database: params.database,
+            password: params.password,
+            host: params.host,
+            port: params.port,
+            max: 10,
+            idleTimeoutMillis: 30000
+        });
+        
+        pool.connect(function(err, client, done) {
+            if(err) {
+                return console.error('error fetching client from pool', err);
+            }
+            var query = multiline.stripIndent(function () {/*
+                CREATE TABLE menu_opciones
+                (
+                  menu_opcion_id serial NOT NULL,
+                  opcion character varying(50) NOT NULL,
+                  href character varying(250),
+                  alias character varying(250),
+                  tooltip character varying(250),
+                  icono character varying(250),
+                  opcion_padre integer,
+                  posicion integer,
+                  estado character varying(50),
+                  CONSTRAINT menu_opciones_pk PRIMARY KEY (menu_opcion_id),
+                  CONSTRAINT menu_opciones_opcion_padre_fkey FOREIGN KEY (opcion_padre)
+                      REFERENCES menu_opciones (menu_opcion_id) MATCH SIMPLE
+                      ON UPDATE NO ACTION ON DELETE NO ACTION
+                );
+
+                CREATE TABLE usuarios
+                (
+                  username text NOT NULL,
+                  password character varying(50) NOT NULL,
+                  nombre character varying(50) NOT NULL,
+                  apellido character varying(50) NOT NULL,
+                  fecha_creacion timestamp without time zone DEFAULT now(),
+                  CONSTRAINT usuarios_pkey PRIMARY KEY (username)
+                );
+
+                CREATE TABLE usuario_menu_opciones
+                (
+                  usuario_menu_opcion_id serial NOT NULL,
+                  username text NOT NULL,
+                  menu_opcion_id integer NOT NULL,
+                  estado character varying(50),
+                  fecha_registro timestamp without time zone DEFAULT now(),
+                  CONSTRAINT usuario_menu_opciones_pk PRIMARY KEY (usuario_menu_opcion_id),
+                  CONSTRAINT usuario_menu_opciones_menu_opcion_id_fkey FOREIGN KEY (menu_opcion_id)
+                      REFERENCES menu_opciones (menu_opcion_id) MATCH SIMPLE
+                      ON UPDATE NO ACTION ON DELETE NO ACTION,
+                  CONSTRAINT usuario_menu_opciones_username_fkey FOREIGN KEY (username)
+                      REFERENCES usuarios (username) MATCH SIMPLE
+                      ON UPDATE NO ACTION ON DELETE NO ACTION
+                );
+            */});
+
+            query = query.replace(/\n/g, '').replace(/\t/g, ' ');
+
+            client.query(query, function(err, result) {
+                done();
+
+                if(err) {
+                    deferred.reject(err);
+                }
+                deferred.resolve(result);
+            });
+
+        });
+
+        return deferred.promise;
     };
 
     var getListDataBase = function(filter, paging, order){
@@ -149,6 +242,8 @@ module.exports = function(connection){
     };
 
     return {
+        createDataBase: createDataBase,
+        createBaseTables: createBaseTables,
         getListDataBase: getListDataBase,
         getListSchemas: getListSchemas,
         getListTables: getListTables,
