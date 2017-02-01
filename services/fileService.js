@@ -21,9 +21,9 @@ exports.createBaseApplication = function(object){
         var folderBackend = appRoot.path + '\\' + cfg.get("COMMON.templates.templatesDirectory") + '\\' + "backend";
         var folderFrontend = appRoot.path + '\\' + cfg.get("COMMON.templates.templatesDirectory") + '\\' + "frontend";
         /* Copy base application for backend */
-        //shell.cp('-r', folderBackend, appDir);
+        shell.cp('-r', folderBackend, appDir);
         /* Copy base application for frontend */
-        //shell.cp('-r', folderFrontend, appDir);
+        shell.cp('-r', folderFrontend, appDir);
         
         /* SET CONFIG TO CONNECT DATA BASE BACKEND */
         var filename = appDir.concat("/backend/config/env/.development");
@@ -1136,7 +1136,6 @@ exports.createHandler = function(object){
         //var path = cfg.BACKEND_PATH.handlers.concat("/"/*, utils.toCamelCase(object.table), '/'*/);
         shell.mkdir('-p', path);
         var filename = path.concat(utils.toCamelCase(object.table), "Handler.js");
-        console.log(filename);
         fs.truncate(filename, 0, function(){
            var _file = fs.createWriteStream(filename, {
                 flags: 'a' 
@@ -1234,21 +1233,27 @@ exports.createHandler = function(object){
             _file.end();
         })
 
-        var match = "/* Routes for " + utils.toCamelCase(object.table) + " */";
+        var matchRoute = "/* Routes for " + utils.toCamelCase(object.table) + " */";
         var routes = "\t/* Routes for " + utils.toCamelCase(object.table) + " */\n" +
                     "\trouter.get('/" + utils.toCamelCase(object.table) + "', jwt({secret: process.env.TOKEN_SECRET}), handlers." + utils.toCamelCase(object.table) + ".get" + utils.toCamelCase(object.table, true) + ");\n" +
                     "\trouter.post('/" + utils.toCamelCase(object.table) + "', jwt({secret: process.env.TOKEN_SECRET}), handlers." + utils.toCamelCase(object.table) + ".create" + utils.toCamelCase(object.table, true) + ");\n" +
                     "\trouter.put('/" + utils.toCamelCase(object.table) + "', jwt({secret: process.env.TOKEN_SECRET}), handlers." + utils.toCamelCase(object.table) + ".update" + utils.toCamelCase(object.table, true) + ");\n" +
                     "\trouter.delete('/" + utils.toCamelCase(object.table) + "', jwt({secret: process.env.TOKEN_SECRET}), handlers." + utils.toCamelCase(object.table) + ".delete" + utils.toCamelCase(object.table, true) + ");\n";
     
-        var endpoint = "\t\t\t\t".concat(utils.toCamelCase(object.table), ": {\n\t\t\t\t\tproxyId: '/", utils.toCamelCase(object.table), "'\n\t\t\t\t},");
-        
-        if(!utils.findLine(object.pathApplication.concat('/', object.nameApplication, cfg.FILE.routes), cfg.ANNOTATION.routes.addRoutes, cfg.ANNOTATION.routes.endRoutes, match)){
+        var requireHandler = "var " + utils.toCamelCase(object.table) + "Handler = require('./handlers/" + utils.toCamelCase(object.table) + "Handler');";
+        var newHandler = "\t" + utils.toCamelCase(object.table) + ": new " + utils.toCamelCase(object.table) + "Handler(),";
+
+
+        if(!utils.findLine(object.pathApplication.concat('/', object.nameApplication, cfg.FILE.routes), cfg.ANNOTATION.routes.addRoutes, cfg.ANNOTATION.routes.endRoutes, matchRoute)){
             utils.injectPackage(object.pathApplication.concat('/', object.nameApplication, cfg.FILE.routes), cfg.ANNOTATION.routes.addRoutes, routes);
         }
-        /*if(!utils.findLine(object.pathApplication.concat('/', object.nameApplication, cfg.FILE.appConfig), cfg.ANNOTATION.appConfig.addEndpoint, cfg.ANNOTATION.appConfig.endEndpoint, utils.toCamelCase(object.table))){
-            utils.injectPackage(object.pathApplication.concat('/', object.nameApplication, cfg.FILE.appConfig), cfg.ANNOTATION.appConfig.addEndpoint, endpoint);
-        }*/
+        if(!utils.findLine(object.pathApplication.concat('/', object.nameApplication, cfg.FILE.server), cfg.ANNOTATION.server.startRequireHandler, cfg.ANNOTATION.server.endRequireHandler, utils.toCamelCase(object.table))){
+            utils.injectPackage(object.pathApplication.concat('/', object.nameApplication, cfg.FILE.server), cfg.ANNOTATION.server.startRequireHandler, requireHandler);
+        }
+        if(!utils.findLine(object.pathApplication.concat('/', object.nameApplication, cfg.FILE.server), cfg.ANNOTATION.server.addHandlers, cfg.ANNOTATION.server.endHandlers, utils.toCamelCase(object.table))){
+            utils.injectPackage(object.pathApplication.concat('/', object.nameApplication, cfg.FILE.server), cfg.ANNOTATION.server.addHandlers, newHandler);
+        }
+        
         deferred.resolve(true);
     }
     catch(error){
