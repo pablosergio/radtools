@@ -14,6 +14,7 @@ var _                  = require('lodash');
 var postgresHandler = function() {
     this.createDataBase = handleCreateDataBaseRequest;
     this.createBaseTables = handleCreateBaseTablesRequest;
+    this.insertDefaultValues = handleInsertDefaultValuesRequest;
     this.getListDataBase = handleGetListDataBaseRequest;
     this.getListSchemas = handleGetListSchemasRequest;
     this.getListTables = handleGetListTablesRequest;
@@ -46,6 +47,25 @@ function handleCreateBaseTablesRequest(req, res, next) {
     var service = postgresService({username: payload.username, password: payload.password});
     //var service = postgresService(params);
     service.createBaseTables(params).then(function(result){
+        /*res.status(200).send({
+            success: true,
+            msg: result
+        })*/
+        next();
+    }, function(err){
+        res.status(500);
+        res.send(err);
+        return next(new Error(err));
+    })
+}
+
+function handleInsertDefaultValuesRequest(req, res, next) {
+    var token = tokenService.getToken(req);
+    var payload = jwt.decode(token, {complete: true}).payload;
+    var params = req.body;
+    var service = postgresService({username: payload.username, password: payload.password});
+    //var service = postgresService(params);
+    service.insertDefaultValues(params).then(function(result){
         res.status(200).send({
             success: true,
             msg: result

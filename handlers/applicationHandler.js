@@ -46,8 +46,8 @@ function handleFindByIdRequest(req, res, next) {
 
         req.query.host = result.host;
         req.query.port = result.port;
-        req.query.database = result.data_base;
-        req.query.schema = result.db_schema;
+        req.query.database = result.database;
+        req.query.schema = result.schema;
         req.query.username = req.body.username;
         req.query.password = req.body.password;
         req.query.table = req.body.table;

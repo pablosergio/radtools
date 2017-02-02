@@ -40,8 +40,8 @@ module.exports = function(connection){
                 token_secret: _application.token_secret, 
                 host: _application.host,
                 port: _application.port,
-                db_schema: _application.db_schema,
-                data_base: _application.data_base
+                schema: _application.schema,
+                database: _application.database
             });
 
     };

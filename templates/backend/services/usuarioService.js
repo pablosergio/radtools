@@ -23,7 +23,7 @@ module.exports = function(){
        _sequelize.authenticate().then(function(){
            var service = menuService(credentials);
            service.getUserMenu({username: credentials.username}).then(function(menu){
-               token = jwt.sign({username: 'palvarado', password: 'palvarado', menu: menu}, process.env.TOKEN_SECRET, { expiresIn : 60*60*24 });
+               token = jwt.sign({username: credentials.username, password: credentials.password, menu: menu}, process.env.TOKEN_SECRET, { expiresIn : 60*60*24 });
                deferred.resolve(token);
            });
            //token = jwt.sign({username: 'palvarado', password: 'palvarado'}, process.env.TOKEN_SECRET, { expiresIn : 60*60*24 });

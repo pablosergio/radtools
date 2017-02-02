@@ -65,14 +65,14 @@ module.exports = {
             field: "port",
             allowNull: false
         },
-        "db_schema": {
+        "schema": {
             type: Seq.TEXT,
-            field: "db_schema",
+            field: "schema",
             allowNull: false
         },
-        "data_base": {
+        "database": {
             type: Seq.TEXT,
-            field: "data_base",
+            field: "database",
             allowNull: false
         },
         "creation_date": {

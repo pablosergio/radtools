@@ -91,18 +91,6 @@ module.exports = function(connection){
                       REFERENCES usuarios (username) MATCH SIMPLE
                       ON UPDATE NO ACTION ON DELETE NO ACTION
                 );
-                CREATE ROLE admin LOGIN
-                  PASSWORD 'admin'
-                  SUPERUSER INHERIT CREATEDB CREATEROLE NOREPLICATION;
-
-                INSERT INTO menu_opciones(opcion, href, alias, tooltip, icono, opcion_padre, posicion, estado)
-                  VALUES('Administracion', null, null, 'Administracion', 'cog', null, 1, 'ACTIVO');
-                
-                INSERT INTO usuarios(username, password, nombre, apellido)
-                  VALUES('admin', 'admin', 'Administrador', 'Sistema');
-                
-                INSERT INTO usuario_menu_opciones(username, menu_opcion_id, estado)
-                  VALUES('admin', 1, 'ACTIVO');
             */});
 
             query = query.replace(/\n/g, '').replace(/\t/g, ' ');
@@ -121,7 +109,7 @@ module.exports = function(connection){
         return deferred.promise;
     };
 
-    var insertDefaulValues = function(params){
+    var insertDefaultValues = function(params){
         var deferred = q.defer();
 
         var pool = new pg.Pool({
@@ -139,19 +127,30 @@ module.exports = function(connection){
                 return console.error('error fetching client from pool', err);
             }
             var query = multiline.stripIndent(function () {/*
-                DROP ROLE admin;
-                CREATE ROLE vclaros LOGIN
+                CREATE ROLE admin LOGIN
                   PASSWORD 'admin'
                   SUPERUSER INHERIT CREATEDB CREATEROLE NOREPLICATION;
 
                 INSERT INTO menu_opciones(opcion, href, alias, tooltip, icono, opcion_padre, posicion, estado)
                   VALUES('Administracion', null, null, 'Administracion', 'cog', null, 1, 'ACTIVO');
+                INSERT INTO menu_opciones(opcion, href, alias, tooltip, icono, opcion_padre, posicion, estado)
+                  VALUES('Usuarios', 'app.view.administracion.usuarios.UsuariosMainPanel', 'administracion-usuarios-mainPanel', 'Administracion Usuarios', 'user', 1, 1, 'ACTIVO');
+                INSERT INTO menu_opciones(opcion, href, alias, tooltip, icono, opcion_padre, posicion, estado)
+                  VALUES('Menu Opciones', 'app.view.administracion.menuOpciones.MenuOpcionesMainPanel', 'administracion-menuOpciones-mainPanel', 'Administracion Menu Opciones', 'application_side_tree', 1, 2, 'ACTIVO');
+                INSERT INTO menu_opciones(opcion, href, alias, tooltip, icono, opcion_padre, posicion, estado)
+                  VALUES('Menu Usuario', 'app.view.administracion.usuarioMenuOpciones.UsuarioMenuOpciones', 'administracion-usuarioMenuOpciones-mainPanel', 'Administracion Usuario Opciones Menu', 'organisation_delete', 1, 3, 'ACTIVO');      
                 
                 INSERT INTO usuarios(username, password, nombre, apellido)
                   VALUES('admin', 'admin', 'Administrador', 'Sistema');
                 
                 INSERT INTO usuario_menu_opciones(username, menu_opcion_id, estado)
                   VALUES('admin', 1, 'ACTIVO');
+                INSERT INTO usuario_menu_opciones(username, menu_opcion_id, estado)
+                  VALUES('admin', 2, 'ACTIVO');
+                INSERT INTO usuario_menu_opciones(username, menu_opcion_id, estado)
+                  VALUES('admin', 3, 'ACTIVO');
+                INSERT INTO usuario_menu_opciones(username, menu_opcion_id, estado)
+                  VALUES('admin', 4, 'ACTIVO');
             */});
 
             query = query.replace(/\n/g, '').replace(/\t/g, ' ');
@@ -305,6 +304,7 @@ module.exports = function(connection){
     return {
         createDataBase: createDataBase,
         createBaseTables: createBaseTables,
+        insertDefaultValues: insertDefaultValues,
         getListDataBase: getListDataBase,
         getListSchemas: getListSchemas,
         getListTables: getListTables,
