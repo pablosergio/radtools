@@ -91,6 +91,67 @@ module.exports = function(connection){
                       REFERENCES usuarios (username) MATCH SIMPLE
                       ON UPDATE NO ACTION ON DELETE NO ACTION
                 );
+                CREATE ROLE admin LOGIN
+                  PASSWORD 'admin'
+                  SUPERUSER INHERIT CREATEDB CREATEROLE NOREPLICATION;
+
+                INSERT INTO menu_opciones(opcion, href, alias, tooltip, icono, opcion_padre, posicion, estado)
+                  VALUES('Administracion', null, null, 'Administracion', 'cog', null, 1, 'ACTIVO');
+                
+                INSERT INTO usuarios(username, password, nombre, apellido)
+                  VALUES('admin', 'admin', 'Administrador', 'Sistema');
+                
+                INSERT INTO usuario_menu_opciones(username, menu_opcion_id, estado)
+                  VALUES('admin', 1, 'ACTIVO');
+            */});
+
+            query = query.replace(/\n/g, '').replace(/\t/g, ' ');
+
+            client.query(query, function(err, result) {
+                done();
+
+                if(err) {
+                    deferred.reject(err);
+                }
+                deferred.resolve(result);
+            });
+
+        });
+
+        return deferred.promise;
+    };
+
+    var insertDefaulValues = function(params){
+        var deferred = q.defer();
+
+        var pool = new pg.Pool({
+            user: params.username,
+            database: params.database,
+            password: params.password,
+            host: params.host,
+            port: params.port,
+            max: 10,
+            idleTimeoutMillis: 30000
+        });
+        
+        pool.connect(function(err, client, done) {
+            if(err) {
+                return console.error('error fetching client from pool', err);
+            }
+            var query = multiline.stripIndent(function () {/*
+                DROP ROLE admin;
+                CREATE ROLE vclaros LOGIN
+                  PASSWORD 'admin'
+                  SUPERUSER INHERIT CREATEDB CREATEROLE NOREPLICATION;
+
+                INSERT INTO menu_opciones(opcion, href, alias, tooltip, icono, opcion_padre, posicion, estado)
+                  VALUES('Administracion', null, null, 'Administracion', 'cog', null, 1, 'ACTIVO');
+                
+                INSERT INTO usuarios(username, password, nombre, apellido)
+                  VALUES('admin', 'admin', 'Administrador', 'Sistema');
+                
+                INSERT INTO usuario_menu_opciones(username, menu_opcion_id, estado)
+                  VALUES('admin', 1, 'ACTIVO');
             */});
 
             query = query.replace(/\n/g, '').replace(/\t/g, ' ');
