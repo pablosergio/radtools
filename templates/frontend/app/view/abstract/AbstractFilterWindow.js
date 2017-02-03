@@ -1,7 +1,7 @@
 Ext.define('app.view.abstract.AbstractFilterWindow', {
 	extend: 'Ext.window.Window',
 	controller: 'app.controller.abstract.AbstractFilterWindowController',
-	alias: 'widget.app-abstract-filter-window',
+	alias: 'widget.abstract-filter-window',
 	modal: true,
 	iconCls: 'application_form_magnify',
 	closable: false,

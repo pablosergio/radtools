@@ -69,9 +69,9 @@ module.exports = function(connection){
                 CREATE TABLE usuarios
                 (
                   username text NOT NULL,
-                  password character varying(50) NOT NULL,
                   nombre character varying(50) NOT NULL,
                   apellido character varying(50) NOT NULL,
+                  email character varying(100) NOT NULL,
                   fecha_creacion timestamp without time zone DEFAULT now(),
                   CONSTRAINT usuarios_pkey PRIMARY KEY (username)
                 );
@@ -140,8 +140,8 @@ module.exports = function(connection){
                 INSERT INTO menu_opciones(opcion, href, alias, tooltip, icono, opcion_padre, posicion, estado)
                   VALUES('Menu Usuario', 'app.view.administracion.usuarioMenuOpciones.UsuarioMenuOpciones', 'administracion-usuarioMenuOpciones-mainPanel', 'Administracion Usuario Opciones Menu', 'organisation_delete', 1, 3, 'ACTIVO');      
                 
-                INSERT INTO usuarios(username, password, nombre, apellido)
-                  VALUES('admin', 'admin', 'Administrador', 'Sistema');
+                INSERT INTO usuarios(username, nombre, apellido, email)
+                  VALUES('admin', 'Administrador', 'Sistema', 'admin@admin.com');
                 
                 INSERT INTO usuario_menu_opciones(username, menu_opcion_id, estado)
                   VALUES('admin', 1, 'ACTIVO');

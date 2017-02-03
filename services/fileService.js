@@ -873,7 +873,7 @@ exports.createGridController = function(object){
           
             _file.write("\tonAddRecordClick: function() {\n")
             _file.write("\t\t_this = this;\n")
-            _file.write("\t\tvar nuevo".concat(utils.toCamelCase(object.table, true), " = Ext.create('", cfg.WORKSPACE.model, ".", utils.toCamelCase(object.table), ".", utils.toCamelCase(object.table, true), "', {\n"))
+            _file.write("\t\tvar nuevo".concat(utils.toCamelCase(object.table, true), " = Ext.create('", cfg.WORKSPACE.model, ".", utils.toCamelCase(object.table), ".", utils.toCamelCase(object.table, true), "Model', {\n"))
             _file.write("\t\t\testado: 'ACTIVO'\n")
             _file.write("\t\t});\n")
             _file.write("\t\treturn _this.get".concat(utils.toCamelCase(object.table, true), "Context().", utils.toCamelCase(object.table), "Opened(nuevo", utils.toCamelCase(object.table, true), ");\n"))
@@ -917,7 +917,7 @@ exports.createGridController = function(object){
             _file.write("\t\t\ttitle: 'Filtrar ".concat(utils.toCamelCase(object.table, true), "',\n"))
             _file.write("\t\t\tgrid: _this.getView()\n")
             _file.write("\t\t});\n")
-            _file.write("\t\tvar filtroForm = Ext.widget('filtro-".concat(utils.toCamelCase(object.table), "-form');\n")) 
+            _file.write("\t\tvar filtroForm = Ext.widget('".concat(utils.toCamelCase(object.table), "-filter-form');\n")) 
             _file.write("\t\tfilterWindow.add(filtroForm);\n")
             _file.write("\t\tfilterWindow.show();\n")
             _file.write("\t},\n")
@@ -1058,7 +1058,7 @@ exports.createFormController = function(object){
             _file.write("\tonSaveButtonClick: function() {\n")
             _file.write("\t\tvar _this = this;\n")
             _file.write("\t\t_this.getView().getForm().updateRecord(_this.get".concat(utils.toCamelCase(object.table, true), "());\n"))
-            _file.write("\t\treturn _this.save".concat(utils.toCamelCase(object.table, true), "(_this.get", utils.toCamelCase(object.table), "());\n"))
+            _file.write("\t\treturn _this.save".concat(utils.toCamelCase(object.table, true), "(_this.get", utils.toCamelCase(object.table, true), "());\n"))
             _file.write("\t},\n")
      
             _file.write("\tsave".concat(utils.toCamelCase(object.table, true), ": function(", utils.toCamelCase(object.table),") {\n"))

@@ -1,7 +1,7 @@
 /* Desarrollado por Pablo Sergio Alvarado G. */
 /* Abstract controller para Window Filter */
 
-Ext.define("app.controller.AbstractFilterWindowController", {
+Ext.define("app.controller.abstract.AbstractFilterWindowController", {
     extend: "Deft.mvc.ViewController",
     control: {
         view: {

@@ -128,7 +128,8 @@ exports.toCamelCase = function(str, isCapitalize){
 exports.convertToColumn = function(column){
     var header = column.name.toUpperCase();
         header = header.replace(/_/gi, ' ');
-        header = header.replace(/ID/gi, '');
+        if(column.foreignkey)
+            header = header.replace(/ID/gi, '');
     var col = "\t\t\t\t{\n" +
              "\t\t\t\t\theader: '".concat(header, "',\n") +
              "\t\t\t\t\tdataIndex: '".concat(column.name, "',\n") +
