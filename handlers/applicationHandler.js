@@ -41,8 +41,8 @@ function handleFindByIdRequest(req, res, next) {
     var service = applicationService({username: payload.username, password: payload.password});
     service.findById(req.body.application_id).then(function(result){
         
-        req.body.pathApplication = result.path_application;
-        req.body.nameApplication = result.name_application;
+        req.body.path_application = result.path_application;
+        req.body.name_application = result.name_application;
 
         req.query.host = result.host;
         req.query.port = result.port;
