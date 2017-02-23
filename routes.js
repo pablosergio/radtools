@@ -22,6 +22,7 @@ function setup(router, handlers) {
     router.get('/postgres/tables', jwt({secret: process.env.TOKEN_SECRET}), handlers.postgres.getListTables);
     router.get('/postgres/columns', jwt({secret: process.env.TOKEN_SECRET}), handlers.postgres.getListColumns);
     /* Create App Base */
+    router.get('/application/applications', /*jwt({secret: process.env.TOKEN_SECRET}),*/ handlers.application.getApplications);
     router.post('/application/create',jwt({secret: process.env.TOKEN_SECRET}), handlers.application.createApplication, handlers.files.createBaseApplication);
     router.post('/application/tables',jwt({secret: process.env.TOKEN_SECRET}), handlers.application.findById, handlers.postgres.getListTables);
     router.post('/application/table/columns',jwt({secret: process.env.TOKEN_SECRET}), handlers.application.findById, handlers.postgres.getListColumns);

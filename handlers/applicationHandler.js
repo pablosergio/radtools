@@ -13,6 +13,7 @@ var _                  = require('lodash');
 
 var applicationHandler = function() {
     this.createApplication = handleCreateApplicationRequest;
+    this.getApplications = handleGetApplicationsRequest;
     this.findById = handleFindByIdRequest;
 }
 
@@ -33,6 +34,32 @@ function handleCreateApplicationRequest(req, res, next) {
         res.send(err);
         return next(new Error(err));
     });
+}
+
+function handleGetApplicationsRequest(req, res, next) {
+    //var token = tokenService.getToken(req);
+    //var payload = jwt.decode(token, {complete: true}).payload;
+    var filter = filterService.removeKeysNull(req.query);
+     var paging = {
+        limit: req.query.limit || 1000,
+        start: req.query.start || 0
+    };
+
+    var order = '"' + req.query.sort == 'undefined' ? 'application_id' :  req.query.sort + '"' + ' ' +  req.query.dir === 'undefined' ? 'ASC' : req.query.dir;
+    
+    var service = applicationService({username: 'postgres', password: 'postgres'});
+    //var service = applicationService({username: payload.username, password: payload.password});
+    service.getApplications(filter, paging, order).then(function(result){
+        res.status(200).send({
+            success: true,
+            rows: result.rows,
+            total: result.count
+        })
+    }, function(err){
+        res.status(500);
+        res.send(err);
+        return next(new Error(err));
+    })
 }
 
 function handleFindByIdRequest(req, res, next) {

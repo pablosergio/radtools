@@ -15,7 +15,7 @@ module.exports = function(connection){
     //     modeloDepartamento = db.model('public.modeloDepartamento'),
     //     propietario        = db.model('public.propietarios');
 
-    var getApplication = function(filter, paging, order){
+    var getApplications = function(filter, paging, order){
         return application.findAndCountAll({
             where: filter,
             limit: paging.limit,
@@ -58,7 +58,7 @@ module.exports = function(connection){
 
 
     return {
-        getApplication: getApplication,
+        getApplications: getApplications,
         findById: findById,
         createApplication: createApplication,
         updateApplication: updateApplication,
