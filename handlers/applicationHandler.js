@@ -14,6 +14,7 @@ var _                  = require('lodash');
 var applicationHandler = function() {
     this.createApplication = handleCreateApplicationRequest;
     this.getApplications = handleGetApplicationsRequest;
+    this.getApplication = handleGetApplicationRequest;
     this.findById = handleFindByIdRequest;
 }
 
@@ -54,6 +55,27 @@ function handleGetApplicationsRequest(req, res, next) {
             success: true,
             rows: result.rows,
             total: result.count
+        })
+    }, function(err){
+        res.status(500);
+        res.send(err);
+        return next(new Error(err));
+    })
+}
+
+function handleGetApplicationRequest(req, res, next) {
+    //var token = tokenService.getToken(req);
+    //var payload = jwt.decode(token, {complete: true}).payload;
+    var filter = filterService.removeKeysNull(req.query);
+     var application_id = parseInt(req.params.id);
+    
+    var service = applicationService({username: 'postgres', password: 'postgres'});
+    //var service = applicationService({username: payload.username, password: payload.password});
+    service.findById(application_id).then(function(result){
+        res.status(200).send({
+            success: true,
+            data: result,
+            msg: cfg.get("COMMON.success")
         })
     }, function(err){
         res.status(500);
