@@ -46,8 +46,8 @@ module.exports = function(connection){
 
     };
 
-    var updateApplication = function(application){
-          return application.update(application, { where: { applicationId: application.applicationId }});
+    var updateApplication = function(_application){
+          return application.update(_application, { where: { application_id: _application.application_id }});
           
     };
 

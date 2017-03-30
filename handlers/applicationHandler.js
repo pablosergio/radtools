@@ -13,12 +13,13 @@ var _                  = require('lodash');
 
 var applicationHandler = function() {
     this.createApplication = handleCreateApplicationRequest;
+    this.updateApplication = handleUpdateApplicationRequest;
     this.getApplications = handleGetApplicationsRequest;
     this.getApplication = handleGetApplicationRequest;
     this.findById = handleFindByIdRequest;
 }
 
-function handleCreateApplicationRequest(req, res, next) {
+function handleCreateApplicationRequest2(req, res, next) {
     var token = tokenService.getToken(req);
     var payload = jwt.decode(token, {complete: true}).payload;
     var service = applicationService({username: payload.username, password: payload.password});
@@ -36,18 +37,67 @@ function handleCreateApplicationRequest(req, res, next) {
         return next(new Error(err));
     });
 }
+function handleCreateApplicationRequest(req, res, next) {
+    //var token = tokenService.getToken(req);
+    //var payload = jwt.decode(token, {complete: true}).payload;
+    var service = applicationService({username: "postgres", password: "postgres"});
+    service.createApplication(req.body).then(function(result){
+        req.application = result;
+        res.status(200).send({
+            success: true,
+            data: result,
+            msg: cfg.get("COMMON.success") 
+        })
+    }, function(err){
+        res.status(500);
+        res.send(err);
+        return next(new Error(err));
+    });
+}
+
+function handleUpdateApplicationRequest(req, res, next) {
+    var token = tokenService.getToken(req);
+    //var payload = jwt.decode(token, {complete: true}).payload;
+    //var service = applicationService({username: payload.username, password: payload.password});
+    var service = applicationService({username: "postgres", password: "postgres"});
+    service.updateApplication(req.body).then(function(result){
+        res.status(200).send({
+            success: true,
+            data:result,
+            msg: cfg.get("COMMON.success")
+        })
+    }, function(err){
+        res.status(500);
+        res.send(err);
+        return next(new Error(err));
+    })
+}
 
 function handleGetApplicationsRequest(req, res, next) {
     //var token = tokenService.getToken(req);
     //var payload = jwt.decode(token, {complete: true}).payload;
     var filter = filterService.removeKeysNull(req.query);
-     var paging = {
-        limit: req.query.limit || 1000,
-        start: req.query.start || 0
+    var _start = 0,
+        _limit = 1000,
+        _sort = 'application_id',
+        _dir = 'ASC';
+    
+    if(typeof req.query.start !== "undefined")
+        _start = req.query.start;
+    if(typeof req.query.limit !== "undefined")
+        _limit = req.query.limit;
+    if(typeof req.query.sort !== "undefined") 
+        _sort = req.query.sort;  
+    if(typeof req.query.dir !== "undefined") 
+        _dir = req.query.dir;  
+    
+    var paging = {
+        limit: _limit,
+        start: _start
     };
 
-    var order = '"' + req.query.sort == 'undefined' ? 'application_id' :  req.query.sort + '"' + ' ' +  req.query.dir === 'undefined' ? 'ASC' : req.query.dir;
-    
+    var order = '"' + _sort + '"' + ' ' +  _dir;
+
     var service = applicationService({username: 'postgres', password: 'postgres'});
     //var service = applicationService({username: payload.username, password: payload.password});
     service.getApplications(filter, paging, order).then(function(result){
