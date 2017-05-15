@@ -17,6 +17,9 @@ function setup(router, handlers) {
 
     /* Routes for lista DataBases from server Postgres */
     router.post('/postgres/createDataBase', jwt({secret: process.env.TOKEN_SECRET}), handlers.postgres.createDataBase, handlers.postgres.createBaseTables, handlers.postgres.insertDefaultValues);
+    /*
+        GET /api/databases?host=elflbd01&port=5430&username=palvarado&password=palvarado
+    */
     router.get('/postgres/databases', jwt({secret: process.env.TOKEN_SECRET}), handlers.postgres.getListDataBase);
     router.get('/postgres/schemas', jwt({secret: process.env.TOKEN_SECRET}), handlers.postgres.getListSchemas);
     router.get('/postgres/tables', jwt({secret: process.env.TOKEN_SECRET}), handlers.postgres.getListTables);

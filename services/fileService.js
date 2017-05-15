@@ -58,7 +58,7 @@ exports.createBaseApplication = function(object){
 exports.createModel = function(object){
     var deferred = q.defer();
     try {
-        var path = object.path_application.concat('/', object.name_application, cfg.PATH.model, '/', utils.toCamelCase(object.table), '/');
+        var path = object.path_application.concat('/', /*object.name_application,*/ cfg.PATH.model, '/', utils.toCamelCase(object.table), '/');
         shell.mkdir('-p', path);
         var filename = path.concat(utils.toCamelCase(object.table, true), 'Model.js'); /* Nombre de Archivo formato camelCase Capitalize */
         var namespace = cfg.WORKSPACE.model.concat(".", utils.toCamelCase(object.table), ".", utils.toCamelCase(object.table, true), "Model");
@@ -130,7 +130,7 @@ exports.createModel = function(object){
 exports.createStore = function(object){
     var deferred = q.defer();
     try {
-        var path = object.path_application.concat('/', object.name_application, cfg.PATH.store, '/', utils.toCamelCase(object.table), '/');
+        var path = object.path_application.concat('/', /*object.name_application,*/ cfg.PATH.store, '/', utils.toCamelCase(object.table), '/');
         shell.mkdir('-p', path);
 
         var filename = path.concat(utils.toCamelCase(object.table, true), 'Store.js'); /* Nombre de Archivo formato Capitalize */
@@ -203,11 +203,11 @@ exports.createStore = function(object){
         var package = "\t\t\t".concat(utils.toCamelCase(object.table), "Store: '", namespace, "',");
         var endpoint = "\t\t\t\t".concat(utils.toCamelCase(object.table), ": {\n\t\t\t\t\tproxyId: '/", utils.toCamelCase(object.table), "'\n\t\t\t\t},");
         
-        if(!utils.findLine(object.path_application.concat('/', object.name_application, cfg.FILE.application), cfg.ANNOTATION.application.startInject, cfg.ANNOTATION.application.endInject, namespace)){
-            utils.injectPackage(object.path_application.concat('/', object.name_application, cfg.FILE.application), cfg.ANNOTATION.application.startInject, package);
+        if(!utils.findLine(object.path_application.concat('/', /*object.name_application,*/ cfg.FILE.application), cfg.ANNOTATION.application.startInject, cfg.ANNOTATION.application.endInject, namespace)){
+            utils.injectPackage(object.path_application.concat('/', /*object.name_application,*/ cfg.FILE.application), cfg.ANNOTATION.application.startInject, package);
         }
-        if(!utils.findLine(object.path_application.concat('/', object.name_application, cfg.FILE.appConfig), cfg.ANNOTATION.appConfig.addEndpoint, cfg.ANNOTATION.appConfig.endEndpoint, utils.toCamelCase(object.table))){
-            utils.injectPackage(object.path_application.concat('/', object.name_application, cfg.FILE.appConfig), cfg.ANNOTATION.appConfig.addEndpoint, endpoint);
+        if(!utils.findLine(object.path_application.concat('/', /*object.name_application,*/ cfg.FILE.appConfig), cfg.ANNOTATION.appConfig.addEndpoint, cfg.ANNOTATION.appConfig.endEndpoint, utils.toCamelCase(object.table))){
+            utils.injectPackage(object.path_application.concat('/', /*object.name_application,*/ cfg.FILE.appConfig), cfg.ANNOTATION.appConfig.addEndpoint, endpoint);
         }
         
         deferred.resolve(true);
@@ -223,7 +223,7 @@ exports.createStore = function(object){
 exports.createService = function(object){
     var deferred = q.defer();
     try {
-        var path = object.path_application.concat('/', object.name_application, cfg.PATH.service, '/', utils.toCamelCase(object.table), '/');
+        var path = object.path_application.concat('/', /*object.name_application,*/ cfg.PATH.service, '/', utils.toCamelCase(object.table), '/');
         shell.mkdir('-p', path);
 
         var filename = path.concat(utils.toCamelCase(object.table, true), 'Service.js'); /* Nombre de Archivo formato Capitalize */
@@ -363,8 +363,8 @@ exports.createService = function(object){
             _file.end();
         })
         var package = "\t\t\t".concat(utils.toCamelCase(object.table), "Service: '", namespace, "',");
-        if(!utils.findLine(object.path_application.concat('/', object.name_application, cfg.FILE.application), cfg.ANNOTATION.application.startInject, cfg.ANNOTATION.application.endInject, namespace)){
-            utils.injectPackage(object.path_application.concat('/', object.name_application, cfg.FILE.application), cfg.ANNOTATION.application.startInject, package);
+        if(!utils.findLine(object.path_application.concat('/', /*object.name_application,*/ cfg.FILE.application), cfg.ANNOTATION.application.startInject, cfg.ANNOTATION.application.endInject, namespace)){
+            utils.injectPackage(object.path_application.concat('/', /*object.name_application,*/ cfg.FILE.application), cfg.ANNOTATION.application.startInject, package);
         }
         deferred.resolve(true);
     }
@@ -379,7 +379,7 @@ exports.createService = function(object){
 exports.createContext = function(object){
     var deferred = q.defer();
     try{
-        var path = object.path_application.concat('/', object.name_application, cfg.PATH.context, '/', utils.toCamelCase(object.table), '/');
+        var path = object.path_application.concat('/', /*object.name_application,*/ cfg.PATH.context, '/', utils.toCamelCase(object.table), '/');
         shell.mkdir('-p', path);
 
         var filename = path.concat(utils.toCamelCase(object.table, true), 'Context.js'); /* Nombre de Archivo formato Capitalize */
@@ -456,8 +456,8 @@ exports.createContext = function(object){
             _file.end();
         })
         var package = "\t\t\t".concat(utils.toCamelCase(object.table), "Context: '", namespace, "',");
-        if(!utils.findLine(object.path_application.concat('/', object.name_application, cfg.FILE.application), cfg.ANNOTATION.application.startInject, cfg.ANNOTATION.application.endInject, namespace)){
-            utils.injectPackage(object.path_application.concat('/', object.name_application, cfg.FILE.application), cfg.ANNOTATION.application.startInject, package);
+        if(!utils.findLine(object.path_application.concat('/', /*object.name_application,*/ cfg.FILE.application), cfg.ANNOTATION.application.startInject, cfg.ANNOTATION.application.endInject, namespace)){
+            utils.injectPackage(object.path_application.concat('/', /*object.name_application,*/ cfg.FILE.application), cfg.ANNOTATION.application.startInject, package);
         }
         deferred.resolve(true);
     }
@@ -472,7 +472,7 @@ exports.createContext = function(object){
 exports.createMainPanel = function(object){
     var deferred = q.defer();
     try{
-        var path = object.path_application.concat('/', object.name_application, cfg.PATH.view, '/', utils.toCamelCase(object.table), '/');
+        var path = object.path_application.concat('/', /*object.name_application,*/ cfg.PATH.view, '/', utils.toCamelCase(object.table), '/');
         shell.mkdir('-p', path);
 
         var filename = path.concat(utils.toCamelCase(object.table, true), 'MainPanel.js'); /* Nombre de Archivo formato Capitalize */
@@ -532,7 +532,7 @@ exports.createMainPanel = function(object){
 exports.createGrid = function(object){
     var deferred = q.defer();
     try{
-        var path = object.path_application.concat('/', object.name_application, cfg.PATH.view, '/', utils.toCamelCase(object.table), '/');
+        var path = object.path_application.concat('/', /*object.name_application,*/ cfg.PATH.view, '/', utils.toCamelCase(object.table), '/');
         shell.mkdir('-p', path);
 
         var filename = path.concat(utils.toCamelCase(object.table, true), 'Grid.js'); /* Nombre de Archivo formato Capitalize */
@@ -585,7 +585,7 @@ exports.createForm = function(object){
     var deferred = q.defer();
     try {
         var isFilterForm = false;
-        var path = object.path_application.concat('/', object.name_application, cfg.PATH.view, '/', utils.toCamelCase(object.table), '/');
+        var path = object.path_application.concat('/', /*object.name_application,*/ cfg.PATH.view, '/', utils.toCamelCase(object.table), '/');
         shell.mkdir('-p', path);
 
         var filename = path.concat(utils.toCamelCase(object.table, true), 'Form.js'); /* Nombre de Archivo formato Capitalize */
@@ -654,7 +654,7 @@ exports.createFilterForm = function(object){
     var deferred = q.defer();
     try{
         var isFilterForm = true;
-        var path = object.path_application.concat('/', object.name_application, cfg.PATH.view, '/', utils.toCamelCase(object.table), '/');
+        var path = object.path_application.concat('/', /*object.name_application,*/ cfg.PATH.view, '/', utils.toCamelCase(object.table), '/');
         shell.mkdir('-p', path);
         var filename = path.concat(utils.toCamelCase(object.table, true), 'FilterForm.js'); 
         var namespace = cfg.WORKSPACE.view.concat(".", utils.toCamelCase(object.table), ".", utils.toCamelCase(object.table, true), "FilterForm")
@@ -714,7 +714,7 @@ exports.createFilterForm = function(object){
 exports.createMainPanelController = function(object){
     var deferred = q.defer();
     try {
-        var path = object.path_application.concat('/', object.name_application, cfg.PATH.controller, '/', utils.toCamelCase(object.table), '/');
+        var path = object.path_application.concat('/', /*object.name_application,*/ cfg.PATH.controller, '/', utils.toCamelCase(object.table), '/');
         shell.mkdir('-p', path);
         var filename = path.concat(utils.toCamelCase(object.table, true), 'MainPanelController.js'); /* Nombre de Archivo formato Capitalize */
         var namespace = cfg.WORKSPACE.controller.concat(".", utils.toCamelCase(object.table), ".", utils.toCamelCase(object.table, true), "MainPanelController")
@@ -782,7 +782,7 @@ exports.createMainPanelController = function(object){
 exports.createGridController = function(object){
     var deferred = q.defer();
     try {
-        var path = object.path_application.concat('/', object.name_application, cfg.PATH.controller, '/', utils.toCamelCase(object.table), '/');
+        var path = object.path_application.concat('/', /*object.name_application,*/ cfg.PATH.controller, '/', utils.toCamelCase(object.table), '/');
         shell.mkdir('-p', path);
 
         var filename = path.concat(utils.toCamelCase(object.table, true), 'GridController.js'); 
@@ -846,7 +846,7 @@ exports.createGridController = function(object){
             _file.write("\t},\n")
             
             _file.write("\tloadInitialData: function() {\n")
-            _file.write("\t\t_this = this;\n")
+            _file.write("\t\tvar _this = this;\n")
             _file.write("\t\t_this.getBtnTrackDataEdition().disable();\n")
             _file.write("\t\t_this.getTextAppliedFilter().setVisible(false);\n")
             _file.write("\t\t_this.getView().setLoading(true);\n")
@@ -860,7 +860,7 @@ exports.createGridController = function(object){
             _file.write("\t},\n")
 
             _file.write("\tload".concat(utils.toCamelCase(object.table, true), ": function() {\n"))
-            _file.write("\t\t_this = this;\n")
+            _file.write("\t\tvar _this = this;\n")
             _file.write("\t\t_this.getView().setLoading(true);\n")
             _file.write("\t\treturn _this.get".concat(utils.toCamelCase(object.table, true), "Service().load", utils.toCamelCase(object.table, true), "({}).then({\n"))
             _file.write("\t\t\tfailure: function(errorMessage) {\n")
@@ -872,7 +872,7 @@ exports.createGridController = function(object){
             _file.write("\t},\n")
           
             _file.write("\tonAddRecordClick: function() {\n")
-            _file.write("\t\t_this = this;\n")
+            _file.write("\t\tvar _this = this;\n")
             _file.write("\t\tvar nuevo".concat(utils.toCamelCase(object.table, true), " = Ext.create('", cfg.WORKSPACE.model, ".", utils.toCamelCase(object.table), ".", utils.toCamelCase(object.table, true), "Model', {\n"))
             _file.write("\t\t\testado: 'ACTIVO'\n")
             _file.write("\t\t});\n")
@@ -880,7 +880,7 @@ exports.createGridController = function(object){
             _file.write("\t},\n")
       
             _file.write("\tonSelectRecord: function(grid, record, row, rowIndex, event) {\n")
-            _file.write("\t\t_this = this;\n")
+            _file.write("\t\tvar _this = this;\n")
             _file.write("\t\t_this.set".concat(utils.toCamelCase(object.table, true), "(record);\n"))
             _file.write("\t\treturn _this.get".concat(utils.toCamelCase(object.table, true), "Context().", utils.toCamelCase(object.table), "Opened(record);\n"))
             _file.write("\t},\n")
@@ -911,7 +911,7 @@ exports.createGridController = function(object){
             _file.write("\t},\n")    
 
             _file.write("\tonFilterGridClick: function(){\n")
-            _file.write("\t\t_this = this;\n")
+            _file.write("\t\tvar _this = this;\n")
             _file.write("\t\tvar filterWindow = Ext.widget('abstract-filter-window', {\n")
             _file.write("\t\t\twidth: 640,\n")
             _file.write("\t\t\ttitle: 'Filtrar ".concat(utils.toCamelCase(object.table, true), "',\n"))
@@ -969,7 +969,7 @@ exports.createGridController = function(object){
 exports.createFormController = function(object){
     var deferred = q.defer();
     try {
-        var path = object.path_application.concat('/', object.name_application, cfg.PATH.controller, '/', utils.toCamelCase(object.table), '/');
+        var path = object.path_application.concat('/', /*object.name_application,*/ cfg.PATH.controller, '/', utils.toCamelCase(object.table), '/');
         shell.mkdir('-p', path);
 
         var filename = path.concat(utils.toCamelCase(object.table, true), 'FormController.js'); 
@@ -1132,7 +1132,7 @@ exports.createFormController = function(object){
 exports.createHandler = function(object){
     var deferred = q.defer();
     try {
-        var path = object.path_application.concat('/', object.name_application, cfg.BACKEND_PATH.handlers, '/');
+        var path = object.path_application.concat('/', /*object.name_application,*/ cfg.BACKEND_PATH.handlers, '/');
         shell.mkdir('-p', path);
         var filename = path.concat(utils.toCamelCase(object.table), "Handler.js");
         fs.truncate(filename, 0, function(){
@@ -1243,14 +1243,14 @@ exports.createHandler = function(object){
         var newHandler = "\t" + utils.toCamelCase(object.table) + ": new " + utils.toCamelCase(object.table) + "Handler(),";
 
 
-        if(!utils.findLine(object.path_application.concat('/', object.name_application, cfg.FILE.routes), cfg.ANNOTATION.routes.addRoutes, cfg.ANNOTATION.routes.endRoutes, matchRoute)){
-            utils.injectPackage(object.path_application.concat('/', object.name_application, cfg.FILE.routes), cfg.ANNOTATION.routes.addRoutes, routes);
+        if(!utils.findLine(object.path_application.concat('/', /*object.name_application,*/ cfg.FILE.routes), cfg.ANNOTATION.routes.addRoutes, cfg.ANNOTATION.routes.endRoutes, matchRoute)){
+            utils.injectPackage(object.path_application.concat('/', /*object.name_application,*/ cfg.FILE.routes), cfg.ANNOTATION.routes.addRoutes, routes);
         }
-        if(!utils.findLine(object.path_application.concat('/', object.name_application, cfg.FILE.server), cfg.ANNOTATION.server.startRequireHandler, cfg.ANNOTATION.server.endRequireHandler, utils.toCamelCase(object.table))){
-            utils.injectPackage(object.path_application.concat('/', object.name_application, cfg.FILE.server), cfg.ANNOTATION.server.startRequireHandler, requireHandler);
+        if(!utils.findLine(object.path_application.concat('/', /*object.name_application,*/ cfg.FILE.server), cfg.ANNOTATION.server.startRequireHandler, cfg.ANNOTATION.server.endRequireHandler, utils.toCamelCase(object.table))){
+            utils.injectPackage(object.path_application.concat('/', /*object.name_application,*/ cfg.FILE.server), cfg.ANNOTATION.server.startRequireHandler, requireHandler);
         }
-        if(!utils.findLine(object.path_application.concat('/', object.name_application, cfg.FILE.server), cfg.ANNOTATION.server.addHandlers, cfg.ANNOTATION.server.endHandlers, utils.toCamelCase(object.table))){
-            utils.injectPackage(object.path_application.concat('/', object.name_application, cfg.FILE.server), cfg.ANNOTATION.server.addHandlers, newHandler);
+        if(!utils.findLine(object.path_application.concat('/', /*object.name_application,*/ cfg.FILE.server), cfg.ANNOTATION.server.addHandlers, cfg.ANNOTATION.server.endHandlers, utils.toCamelCase(object.table))){
+            utils.injectPackage(object.path_application.concat('/', /*object.name_application,*/ cfg.FILE.server), cfg.ANNOTATION.server.addHandlers, newHandler);
         }
         
         deferred.resolve(true);

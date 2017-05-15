@@ -75,6 +75,10 @@ exports.getType = function(type){
             field.type = "date";
             field.size = this.getSize(type);
             break;
+        case String(type.match(/^date.*/)):
+            field.type = "date";
+            field.size = this.getSize(type);
+            break;    
     }
     //return _type;
     return field;

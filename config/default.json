@@ -14,22 +14,22 @@
     "services": "/backend/services"
   },
   "PATH": {
-  	"app": "/frontend/app",
-  	"model": "/frontend/app/model",
-  	"store": "/frontend/app/store",
-  	"service": "/frontend/app/service",
-  	"view": "/frontend/app/view",
-  	"controller": "/frontend/app/controller",
-  	"context": "/frontend/app/context"
+  	"app": "/app",
+  	"model": "/app/model",
+  	"store": "/app/store",
+  	"service": "/app/service",
+  	"view": "/app/view",
+  	"controller": "/app/controller",
+  	"context": "/app/context"
   },
   "WORKSPACE": {
-  	"app": "app",
-  	"model": "app.model",
-  	"store": "app.store",
-  	"service": "app.service",
-  	"view": "app.view",
-  	"controller": "app.controller",
-  	"context": "app.context"
+  	"app": "sglm",
+  	"model": "sglm.model",
+  	"store": "sglm.store",
+  	"service": "sglm.service",
+  	"view": "sglm.view",
+  	"controller": "sglm.controller",
+  	"context": "sglm.context"
   },
   "CLASS_EXTJS": {
     "controller": "Deft.mvc.ViewController",
@@ -38,14 +38,14 @@
     "form": "Ext.form.Panel"
   },
   "CLASS_ABSTRACT": {
-    "controller": "app.controller.abstract.AbstractController",
-    "gridController": "app.controller.abstract.AbstractGridController",
-    "formController": "app.controller.abstract.AbstractFormController",
-    "store": "app.store.abstract.AbstractStore",
-    "context": "app.context.abstract.AbstractContext",
-    "grid": "app.view.abstract.AbstractGrid",
-    "form": "app.view.abstract.AbstractForm",
-    "filterWindow": "app.view.abstract.AbstractFilterWindow"
+    "controller": "sglm.controller.abstract.AbstractController",
+    "gridController": "sglm.controller.abstract.AbstractGridController",
+    "formController": "sglm.controller.abstract.AbstractFormController",
+    "store": "sglm.store.abstract.AbstractStore",
+    "context": "sglm.context.abstract.AbstractContext",
+    "grid": "sglm.view.abstract.AbstractGrid",
+    "form": "sglm.view.abstract.AbstractForm",
+    "filterWindow": "sglm.view.abstract.AbstractFilterWindow"
   },
   "TOKEN": {
     "key": "appToken"
@@ -82,8 +82,8 @@
     "queryParam": "contains"
   },
   "FILE": {
-    "application": "/frontend/app/Application.js",
-    "appConfig": "/frontend/app/config/AppConfig.js",
+    "application": "/app/Application.js",
+    "appConfig": "/app/config/AppConfig.js",
     "routes": "/backend/routes.js",
     "server": "/backend/server.js"
   },
